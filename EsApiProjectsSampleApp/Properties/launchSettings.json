@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EsApiProjectsSampleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--token \"\""
+    }
+  }
+}
