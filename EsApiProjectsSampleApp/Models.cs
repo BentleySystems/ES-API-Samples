@@ -6,16 +6,24 @@
 
     public record Project(Guid Id, string DisplayName, string Number);
 
-    public record CreateProject
-    {
-        public Guid TemplateId { get; init; }
-        public string DisplayName { get; init; } = string.Empty;
-        public string Number { get; init; } = string.Empty;
-        public string DataCenterLocation { get; init; } = string.Empty;
-        public string BillingCountry { get; init; } = string.Empty;
-    }
+    public record CreateProject(Guid TemplateId, string DisplayName, string Number, string DataCenterLocation, string BillingCountry);
 
     public record Provision(Guid ProjectId, Guid ProvisionId);
 
-    public record ProvisionStatus(Guid Id, Guid TemplateId, Guid ProjectId, string State);
+    public record ProvisionStatus(Guid Id, Guid TemplateId, Guid ProjectId, /* Value from CopyState */ string State);
+
+    public class ProjectTypes
+    {
+        public const string ProjectWise = "ProjectWise";
+        public const string Synchro = "SYNCHRO";
+    }
+
+    public class CopyState
+    {
+        public const string Created = "Created";
+        public const string Queued = "Queued";
+        public const string Started = "Started";
+        public const string Succeeded = "Succeeded";
+        public const string Failed = "Failed";
+    }
 }
