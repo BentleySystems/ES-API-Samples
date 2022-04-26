@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
 
 await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
@@ -19,7 +20,13 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     {
         ConsoleApp.Log("Fetching billing countries failed with status code: {0}.\nResponse: {1}",
             billingCountriesResponse.StatusCode,
-            await billingCountriesResponse.Content.ReadAsStringAsync());
+            await billingCountriesResponse.Content.ReadAsStringAsync(),
+            string.Join(";", billingCountriesResponse.Headers.Select(h => h.ToString())));
+        if (billingCountriesResponse.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden &&
+            billingCountriesResponse.Headers.TryGetValues("WWW-Authenticate", out var reasonHeader))
+        {
+            ConsoleApp.Log("Authentication failure reason: {0}", string.Join(";", reasonHeader));
+        }
         return;
     }
     
