@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
-using Polly;
 
 await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
 {
@@ -11,33 +10,46 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     };
 
     // Get first Billing country from the list
-    Console.WriteLine("Fetching billing countries");
+    ConsoleApp.Log("Fetching billing countries");
 
-    var billingCountries = await client.GetFromJsonAsync<PagedResponse<string>>("/user/v1/users/current/billingCountries");
+    var billingCountriesResponse = await client.GetAsync("/user/v1/users/current/billingCountries");
+
+    // Handling first request for possible authentication/authorization errors
+    if (!billingCountriesResponse.IsSuccessStatusCode)
+    {
+        ConsoleApp.Log("Fetching billing countries failed with status code: {0}.\nResponse: {1}",
+            billingCountriesResponse.StatusCode,
+            await billingCountriesResponse.Content.ReadAsStringAsync());
+        return;
+    }
+    
+    var billingCountries = await billingCountriesResponse.Content.ReadFromJsonAsync<PagedResponse<string>>();
     var billingCountry = (billingCountries?.Items ?? Enumerable.Empty<string>()).First();
 
-    Console.WriteLine("Will use '{0}' billing country", billingCountry);
+    ConsoleApp.Log("Will use '{0}' billing country", billingCountry);
 
     // Get first Data center from the list
-    Console.WriteLine("Fetching data centers");
+    ConsoleApp.Log("Fetching data centers");
 
+    // Not handling possible network or status code errors for simplicity's sake
     var dataCenters = await client.GetFromJsonAsync<PagedResponse<string>>(
         $"/project/v1/projectTypes/{configuration.ProjectType}/datacenters");
     var dataCenter = (dataCenters?.Items ?? Enumerable.Empty<string>()).First();
 
-    Console.WriteLine("Will use '{0}' data center", dataCenter);
+    ConsoleApp.Log("Will use '{0}' data center", dataCenter);
 
-    // Get first template Id from Global templates by name 
-    Console.WriteLine("Fetching global templates");
+    // Get first template Id from Global templates by name
+    ConsoleApp.Log("Fetching global templates");
 
+    // You could also use an organization template by changing endpoint from templates/bentley to templates/organization
     var templates = await client.GetFromJsonAsync<PagedResponse<Template>>(
-        $"project/v1/projects/templates/bentley?projectType={configuration.ProvisionProjectType}");
-    var template = templates?.Items.FirstOrDefault() ?? throw new Exception($"Could not find a global '{configuration.ProvisionProjectType}' template");
+        $"project/v1/projectTypes/{configuration.ProjectType}/templates/bentley");
+    var template = templates?.Items.FirstOrDefault() ?? throw new Exception($"Could not find a global '{configuration.ProjectType}' template");
 
-    Console.WriteLine("Will use '{0}' template", template.DisplayName);
+    ConsoleApp.Log("Will use '{0}' template", template.DisplayName);
 
     // Create project
-    Console.WriteLine("Starting project creation");
+    ConsoleApp.Log($"Starting project '{arguments.Name}' creation");
 
     var createProject = new CreateProject()
     {
@@ -48,65 +60,69 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         BillingCountry = billingCountry,
     };
     var createProjectResponse = await client.PostAsync("project/v1/projects", JsonContent.Create(createProject));
-    createProjectResponse.EnsureSuccessStatusCode();
+
+    // Handling create project request because it contains custom status codes:
+    //  - 422 - when provided model is incorrect (like non-existent data center location or billing country)
+    //  - 409 - when a project with provided project name already exists
+    if (!createProjectResponse.IsSuccessStatusCode)
+    {
+        ConsoleApp.Log("Creating project failed with status code: {0}.\nResponse: {1}",
+            createProjectResponse.StatusCode,
+            await createProjectResponse.Content.ReadAsStringAsync());
+        return;
+    }
+
     var createdProjectProvision = await createProjectResponse.Content.ReadFromJsonAsync<Provision>();
-
-    // Wait for create project provision to finish
-    Console.WriteLine("Waiting for new project to be provisioned");
-
-    var retryPolicy = Policy
-        .HandleResult<ProvisionStatus?>(s => s?.State is "Queued" or "Created" or "Started")
-        .WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(1));
-    var timeoutPolicy = Policy.TimeoutAsync(120);
-
-    var policy = timeoutPolicy.WrapAsync(retryPolicy);
-
     var projectId = createdProjectProvision?.ProjectId;
     var provisionId = createdProjectProvision?.ProvisionId;
 
-    var lastState = await policy.ExecuteAndCaptureAsync(async () =>
+    // Wait for create project provision to finish
+    ConsoleApp.Log("Waiting for new project to be provisioned");
+
+    string provisionState;
+    do
     {
-        var provision = await client.GetFromJsonAsync<ProvisionStatus>($"project/v1/projects/{projectId}/provisions/{provisionId}");
+        var status = await client.GetFromJsonAsync<ProvisionStatus>($"project/v1/projects/{projectId}/provisions/{provisionId}");
+        
+        provisionState = status?.State ?? throw new Exception("Service could not retrieve provision state");
+        
+        ConsoleApp.Log("Provision status: {0}", provisionState);
+        if (provisionState is "Queued" or "Created" or "Started")
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5));
+        }
 
-        Console.WriteLine("Provision status: {0}", provision?.State);
+    } while (provisionState is "Queued" or "Created" or "Started");
 
-        return provision;
-    });
-
-    if (lastState.Result?.State is not "Succeeded")
-    {
-        throw new Exception($"Provision failed. Last known state: '{lastState.Result?.State}'");
-    }
+    ConsoleApp.Log("Provisioning finished. Fetching project.");
 
     // Get project by Id
-    Console.WriteLine("Provisioning finished. Fetching project.");
-
     var createdProject = await client.GetFromJsonAsync<Project>($"project/v1/projects/{projectId}");
 
     // Print project info to console
-    Console.WriteLine("Created project:");
-    Console.WriteLine("    Id: {0}", createdProject?.Id);
-    Console.WriteLine("    DisplayName: {0}", createdProject?.DisplayName);
-    Console.WriteLine("    Number: {0}", createdProject?.Number);
+    ConsoleApp.Log("Created project:");
+    ConsoleApp.Log("    Id: {0}", createdProject?.Id);
+    ConsoleApp.Log("    DisplayName: {0}", createdProject?.DisplayName);
+    ConsoleApp.Log("    Number: {0}", createdProject?.Number);
 
     // Get projects list
-    Console.WriteLine("Fetching user project list.");
+    ConsoleApp.Log("Fetching created project list.");
 
     var projectsResponse = await client.GetFromJsonAsync<PagedResponse<Project>>($"project/v1/projects?projectName={arguments.Name}");
     var projects = (projectsResponse?.Items ?? Enumerable.Empty<Project>());
 
     // Print projects to console
-    Console.WriteLine("Project names:");
+    ConsoleApp.Log("Project names:");
     foreach (var project in projects)
     {
-        Console.WriteLine("    - {0}", project.DisplayName);
+        ConsoleApp.Log("    - {0}", project.DisplayName);
     }
 
     // Delete created project
-    Console.WriteLine("Deleting created project.");
+    ConsoleApp.Log("Deleting created project.");
 
     var response = await client.DeleteAsync($"project/v1/projects/{projectId}");
     response.EnsureSuccessStatusCode();
 
-    Console.WriteLine("Project deleted.");
+    ConsoleApp.Log("Project deleted.");
 });
