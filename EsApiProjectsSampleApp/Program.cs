@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
 
-var AddWorkAreaConnectionsToProject = async (HttpClient client, Guid? projectId) => {
+var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId) => {
     ConsoleApp.Log("Creating work area connection");
     // Work area connection makes it possible for cloud services to access ProjectWise data.
     var connectionToCreate = new CreateConnection(
@@ -32,13 +32,17 @@ var AddWorkAreaConnectionsToProject = async (HttpClient client, Guid? projectId)
     // There can only be one primary connection per project.
     await client.PostAsync($"workarea/v1/projects/{projectId}/primaryConnection/{connection?.Id}", null);
 
+    return connection;
+};
+
+var RemoveWorkAreaConnection = async (HttpClient client, Guid? projectId, string connectionId) => {
     ConsoleApp.Log("Removing primary status of connection");
 
     await client.DeleteAsync($"workarea/v1/projects/{projectId}/primaryConnection");
 
     ConsoleApp.Log("Deleting work area connection");
     // Can't delete connection if it's primary
-    await client.DeleteAsync($"workarea/v1/projects/{projectId}/connections/{connection?.Id}");
+    await client.DeleteAsync($"workarea/v1/projects/{projectId}/connections/{connectionId}");
 };
 
 await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
@@ -158,7 +162,9 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("    - {0}", project.DisplayName);
     }
 
-    await AddWorkAreaConnectionsToProject(client, projectId);
+    var connection = await AddWorkAreaConnectionToProject(client, projectId);
+
+    await RemoveWorkAreaConnection(client, projectId, connection.Id);
 
     // Delete created project
     ConsoleApp.Log("Deleting created project.");
