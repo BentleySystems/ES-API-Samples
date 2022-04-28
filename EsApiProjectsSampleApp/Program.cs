@@ -36,12 +36,11 @@ var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId) 
 };
 
 var RemoveWorkAreaConnection = async (HttpClient client, Guid? projectId, string connectionId) => {
+    // Can't delete connection if it's primary. Need to remove primary status of the connection first.
     ConsoleApp.Log("Removing primary status of connection");
-
     await client.DeleteAsync($"workarea/v1/projects/{projectId}/primaryConnection");
 
     ConsoleApp.Log("Deleting work area connection");
-    // Can't delete connection if it's primary
     await client.DeleteAsync($"workarea/v1/projects/{projectId}/connections/{connectionId}");
 };
 
