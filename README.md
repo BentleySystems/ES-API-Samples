@@ -8,7 +8,7 @@ A sample application that demonstrates how to create, query and delete a Project
 
 * [Git](https://git-scm.com/)
 * [.NET 6.0](https://dotnet.microsoft.com/download/dotnet/6.0/)
-* Optionally an IDE like Visual Studio 2022 or [Visual Studio Code](https://code.visualstudio.com/). You can also use command line if you whish
+* Optionally an IDE like Visual Studio 2022 or [Visual Studio Code](https://code.visualstudio.com/). It is also possible to use command line.
 
 ## Development Setup (Visual Studio 2022)
 
