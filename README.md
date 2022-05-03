@@ -8,7 +8,7 @@ A sample application that demonstrates how to create, query and delete a Project
 
 * [Git](https://git-scm.com/)
 * [.NET 6.0](https://dotnet.microsoft.com/download/dotnet/6.0/)
-* Optionally an IDE like Visual Studio 2022 or [Visual Studio Code](https://code.visualstudio.com/). You can also use command line if you whish
+* Optionally an IDE like Visual Studio 2022 or [Visual Studio Code](https://code.visualstudio.com/). It is also possible to use command line.
 
 ## Development Setup (Visual Studio 2022)
 
@@ -29,4 +29,10 @@ A sample application that demonstrates how to create, query and delete a Project
    2. Optionally set `--name` command line argument. A random name will be generated otherwise.
 
 ## How to acquire a token
-<span style="color:red">TODO: Explain how to get a user 
+
+Valid access token is required to acces to API endpoints. For more technical information abaout tokens and authentication see: https://developer.bentley.com/apis/overview/authorization/.
+
+For testing token could be obtained from API Swagger page https://esapi-projects-eus.bentley.com/swagger/index.html.
+
+For aplication need to register client and use its credentials to get access token. 
+TODO: add client registration process description
