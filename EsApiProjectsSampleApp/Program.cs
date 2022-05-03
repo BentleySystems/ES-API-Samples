@@ -6,6 +6,44 @@ using System.Net;
 using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
 
+var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId) => {
+    ConsoleApp.Log("Creating work area connection");
+    // Work area connection makes it possible for cloud services to access ProjectWise data.
+    var connectionToCreate = new CreateConnection(
+        new Uri("http://link-to-pw-wsg.com/ws/v2.8/repositories/{datasource}/PW_WSG/Project/60e9dda5-5297-4916-9739-0e40fd00a4b8"),
+        "Connection display name",
+        "Description",
+        "Work area name");
+    var createResponse = await client.PostAsJsonAsync($"workarea/preview/projects/{projectId}/connections", connectionToCreate);
+    createResponse.EnsureSuccessStatusCode();
+
+    ConsoleApp.Log("Fetching work area connection details");
+
+    var connection = await client.GetFromJsonAsync<GetConnection>(createResponse.Headers.Location);
+
+    ConsoleApp.Log("Created work area connection:");
+    ConsoleApp.Log("    Id: {0}", connection?.Id);
+    ConsoleApp.Log("    DisplayName: {0}", connection?.DisplayName);
+    ConsoleApp.Log("    Description: {0}", connection?.Description);
+    ConsoleApp.Log("    WorkAreaName: {0}", connection?.WorkAreaName);
+    ConsoleApp.Log("    Type: {0}", connection?.Type);
+
+    ConsoleApp.Log("Setting work area connection as primary");
+    // There can only be one primary connection per project.
+    await client.PostAsync($"workarea/preview/projects/{projectId}/primaryConnection/{connection?.Id}", null);
+
+    return connection;
+};
+
+var RemoveWorkAreaConnection = async (HttpClient client, Guid? projectId, string connectionId) => {
+    // Can't delete connection if it's primary. Need to remove primary status of the connection first.
+    ConsoleApp.Log("Removing primary status of connection");
+    await client.DeleteAsync($"workarea/preview/projects/{projectId}/primaryConnection");
+
+    ConsoleApp.Log("Deleting work area connection");
+    await client.DeleteAsync($"workarea/preview/projects/{projectId}/connections/{connectionId}");
+};
+
 await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
 {
     var client = new HttpClient()
@@ -33,7 +71,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         }
         return;
     }
-    
+
     var billingCountries = await billingCountriesResponse.Content.ReadFromJsonAsync<PagedResponse<string>>();
     var billingCountry = billingCountries?.Items.FirstOrDefault() ?? throw new Exception("Could not find any billing countries");
 
@@ -122,6 +160,10 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     {
         ConsoleApp.Log("    - {0}", project.DisplayName);
     }
+
+    var connection = await AddWorkAreaConnectionToProject(client, projectId);
+
+    await RemoveWorkAreaConnection(client, projectId, connection.Id);
 
     // Delete created project
     ConsoleApp.Log("Deleting created project.");
