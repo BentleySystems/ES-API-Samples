@@ -17,7 +17,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     // Get first Billing country from the list
     ConsoleApp.Log("Fetching billing countries");
 
-    var billingCountriesResponse = await client.GetAsync("/user/v1/users/current/billingCountries");
+    var billingCountriesResponse = await client.GetAsync("/user/preview/users/current/billingCountries");
 
     // Handling first request for possible authentication/authorization errors
     if (!billingCountriesResponse.IsSuccessStatusCode)
@@ -44,7 +44,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
 
     // Not handling possible network or status code errors for simplicity's sake
     var dataCenters = await client.GetFromJsonAsync<PagedResponse<string>>(
-        $"/project/v1/projectTypes/{configuration.ProjectType}/datacenters");
+        $"/project/preview/projectTypes/{configuration.ProjectType}/datacenters");
     var dataCenter = dataCenters?.Items.FirstOrDefault() ?? throw new Exception("Could not find any data centers");
 
     ConsoleApp.Log("Will use '{0}' data center", dataCenter);
@@ -54,7 +54,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
 
     // You could also use an organization template by changing endpoint from templates/bentley to templates/organization
     var templates = await client.GetFromJsonAsync<PagedResponse<Template>>(
-        $"project/v1/projectTypes/{configuration.ProjectType}/templates/bentley");
+        $"project/preview/projectTypes/{configuration.ProjectType}/templates/bentley");
     var template = templates?.Items.FirstOrDefault() ?? throw new Exception($"Could not find a global '{configuration.ProjectType}' template");
 
     ConsoleApp.Log("Will use '{0}' template", template.DisplayName);
@@ -68,7 +68,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         Number: arguments.Name,
         DataCenterLocation: dataCenter,
         BillingCountry: billingCountry);
-    var createProjectResponse = await client.PostAsJsonAsync("project/v1/projects", createProject);
+    var createProjectResponse = await client.PostAsJsonAsync("project/preview/projects", createProject);
 
     // Handling create project request because it contains custom status codes:
     //  - 422 - when provided model is incorrect (like non-existent data center location or billing country)
@@ -89,7 +89,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     ConsoleApp.Log("Waiting for new project to be provisioned");
 
     async Task<string?> GetProvisionStateAsync() =>
-        (await client.GetFromJsonAsync<ProvisionStatus>($"project/v1/projects/{projectId}/provisions/{provisionId}"))
+        (await client.GetFromJsonAsync<ProvisionStatus>($"project/preview/projects/{projectId}/provisions/{provisionId}"))
         ?.State;
 
     string? provisionState;
@@ -102,7 +102,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     ConsoleApp.Log("Provisioning finished. Fetching project.");
 
     // Get project by Id
-    var createdProject = await client.GetFromJsonAsync<Project>($"project/v1/projects/{projectId}");
+    var createdProject = await client.GetFromJsonAsync<Project>($"project/preview/projects/{projectId}");
 
     // Print project info to console
     ConsoleApp.Log("Created project:");
@@ -113,7 +113,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     // Get projects list
     ConsoleApp.Log("Fetching created project list.");
 
-    var projectsResponse = await client.GetFromJsonAsync<PagedResponse<Project>>($"project/v1/projects?projectName={arguments.Name}");
+    var projectsResponse = await client.GetFromJsonAsync<PagedResponse<Project>>($"project/preview/projects?projectName={arguments.Name}");
     var projects = projectsResponse?.Items ?? throw new Exception("Could not parse GET projects response.");
 
     // Print projects to console
@@ -126,7 +126,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     // Delete created project
     ConsoleApp.Log("Deleting created project.");
 
-    var response = await client.DeleteAsync($"project/v1/projects/{projectId}");
+    var response = await client.DeleteAsync($"project/preview/projects/{projectId}");
     response.EnsureSuccessStatusCode();
 
     ConsoleApp.Log("Project deleted.");
