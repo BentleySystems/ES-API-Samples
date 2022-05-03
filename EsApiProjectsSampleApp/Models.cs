@@ -16,6 +16,10 @@ namespace EsApiProjectsSampleApp
 
     public record ProvisionStatus(Guid Id, Guid TemplateId, Guid ProjectId, /* Value from CopyState */ string State);
 
+    public record CreateConnection(Uri Url, string DisplayName, string Description, string WorkAreaName);
+
+    public record GetConnection(string Id, Uri Url, string Type, string DisplayName, string Description, string WorkAreaName);
+
     public class ProjectTypes
     {
         public const string ProjectWise = "ProjectWise";
