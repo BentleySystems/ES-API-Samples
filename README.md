@@ -30,9 +30,9 @@ A sample application that demonstrates how to create, query and delete a Project
 
 ## How to acquire a token
 
-Valid access token with scope 'enterprise' is required to acces API endpoints. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization/.
+Valid access token with scope 'enterprise' is required to access API endpoints. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization/.
 
-For testing token could be obtained from API Swagger page https://esapi-projects-eus.bentley.com/swagger/index.html.
+For testing token could be obtained from API Swagger page: https://esapi-projects-eus.bentley.com/swagger/index.html.
 
 For application need to register client and use its credentials to get access token. 
 TODO: add client registration process description
