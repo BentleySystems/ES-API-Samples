@@ -1,4 +1,4 @@
-# ES API Projects Sample App
+# ES API Projects Sample Application
 
 Copyright © Bentley Systems, Incorporated. All rights reserved.
 
@@ -35,4 +35,5 @@ Valid access token with scope 'enterprise' is required to access API endpoints. 
 For testing token could be obtained from API Swagger page: https://esapi-projects-eus.bentley.com/swagger/index.html.
 
 For application need to register client and use its credentials to get access token. 
-TODO: add client registration process description
+
+TODO: Add client registration process description
