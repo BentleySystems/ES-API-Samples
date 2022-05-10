@@ -37,3 +37,9 @@ For testing token could be obtained from API Swagger page: https://esapi-project
 For application need to register client and use its credentials to get access token. 
 
 TODO: Add client registration process description
+
+## API documentation
+
+API documentation in OpenAPI V3 format:
+* Projects API: https://es-api.bentley.com/project/preview/swagger.json
+* Work Area Connection API: https://es-api.bentley.com/workarea/preview/swagger.json
