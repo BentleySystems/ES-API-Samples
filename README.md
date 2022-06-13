@@ -14,7 +14,7 @@ A sample application that demonstrates how to create, query and delete a Project
 
 1. Clone Repository
 2. Open `ES API Projects Sample App.sln` and Build
-3. Set user token command line argument in `Properties/launchSettings.json`. How to acquire a token is explained [here](#how-to-acquire-a-token)
+3. Set valid access token with scope 'enterprise' in command line argument `--token` in `Properties/launchSettings.json`. [How to acquire a token](#how-to-acquire-a-token) is explained below.
 4. Optionally set `--name` command line argument. A random name will be generated otherwise.
 5. Run to debug
 
