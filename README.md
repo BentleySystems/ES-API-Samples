@@ -1,8 +1,8 @@
-# ES API Projects Sample Application
+# Enterprise Systems API Sample Application
 
 Copyright © Bentley Systems, Incorporated. All rights reserved.
 
-A sample application that demonstrates how to create, query and delete a Project using the ES Project API. It also shows billing country and data center endpoint usage.
+A sample application that demonstrates how to create, query and delete a Project using the Enterprise Systems Project API. It also demonstrates Enterprise Systems Work Area Connection API, billing country endpoint and data center endpoint usage.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ A sample application that demonstrates how to create, query and delete a Project
 3. Build app with `dotnet build`
 4. Change directory into build folder `cd EsApiProjectsSampleApp/bin/Debug/net6.0/`
 5. Run app with `dotnet EsApiProjectsSampleApp.dll --token "{your_token}"`
-   1. How to acquire a token is explained [here](#how-to-acquire-a-token)
+   1. [How to acquire a token](#how-to-acquire-a-token) is explained below.
    2. Optionally set `--name` command line argument. A random name will be generated otherwise.
 
 ## How to acquire a token
@@ -35,8 +35,6 @@ Valid access token with scope 'enterprise' is required to access API endpoints. 
 For testing token could be obtained from API Swagger page: https://esapi-projects-eus.bentley.com/swagger/index.html.
 
 For application need to register client and use its credentials to get access token. 
-
-TODO: Add client registration process description
 
 ## API documentation
 
