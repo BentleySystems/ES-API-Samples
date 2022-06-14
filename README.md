@@ -16,7 +16,8 @@ A sample application that demonstrates how to create, query and delete a Project
 2. Open `ES API Projects Sample App.sln` and Build
 3. Set valid access token with scope 'enterprise' in command line argument `--token` in `Properties/launchSettings.json`. [How to acquire a token](#how-to-acquire-a-token) is explained below.
 4. Optionally set `--name` command line argument. A random name will be generated otherwise.
-5. Run to debug
+5. Optionally set `--datasourceuri` command line argument. A random data sourse Uri will be generated otherwise.
+6. Run to debug
 
 ## Development Setup (command line)
 
@@ -27,6 +28,7 @@ A sample application that demonstrates how to create, query and delete a Project
 5. Run app with `dotnet EsApiProjectsSampleApp.dll --token "{your_token}"`
    1. [How to acquire a token](#how-to-acquire-a-token) is explained below.
    2. Optionally set `--name` command line argument. A random name will be generated otherwise.
+   3. Optionally set `--datasourceuri` command line argument. A random data sourse Uri will be generated otherwise.
 
 ## How to acquire a token
 
