@@ -4,5 +4,5 @@
 *--------------------------------------------------------------------------------------------*/
 namespace EsApiProjectsSampleApp
 {
-    public record Arguments(string Token, string Name);
+    public record Arguments(string Token, string Name, string DataSourceUri);
 }

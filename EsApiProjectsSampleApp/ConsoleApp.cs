@@ -19,21 +19,24 @@ namespace EsApiProjectsSampleApp
                 IsRequired = true,
             };
             var nameOption = new Option<string>("--name", getDefaultValue: () => $"Sample_Project_{Guid.NewGuid()}", description: "Project name");
+            var dataSourceUriOption = new Option<string>("--datasourceuri",
+                getDefaultValue: () => $"http://link-to-pw-wsg.com/ws/v2.8/repositories/datasource/PW_WSG/Project/{Guid.NewGuid()}",
+                description: "Work Area Connection data source URI");
 
             // Add the options to a root command:
-            var rootCommand = new RootCommand { tokenOption, nameOption };
+            var rootCommand = new RootCommand { tokenOption, nameOption, dataSourceUriOption };
 
-            rootCommand.Description = "Es Api Projects Sample App";
+            rootCommand.Description = "Es Api Sample App";
 
-            rootCommand.SetHandler(async (string token, string name) =>
+            rootCommand.SetHandler(async (string token, string name, string dataSourceUri) =>
             {
-                if (string.IsNullOrWhiteSpace(token))
+                if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
                 {
-                    Log("--token argument must not be null or empty.");
+                    Log("--token argument must be set.");
                     return;
                 }
-                await runAsync(new Arguments(token, name), ReadConfiguration());
-            }, tokenOption, nameOption);
+                await runAsync(new Arguments(token, name, dataSourceUri), ReadConfiguration());
+            }, tokenOption, nameOption, dataSourceUriOption);
 
             // Parse the incoming args and invoke the handler
             return rootCommand.InvokeAsync(args);
