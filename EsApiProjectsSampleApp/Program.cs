@@ -6,11 +6,11 @@ using System.Net;
 using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
 
-var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId) => {
+var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId, string dataSourceUri) => {
     ConsoleApp.Log("Creating work area connection");
     // Work area connection makes it possible for cloud services to access ProjectWise data.
     var connectionToCreate = new CreateConnection(
-        new Uri("http://link-to-pw-wsg.com/ws/v2.8/repositories/{datasource}/PW_WSG/Project/60e9dda5-5297-4916-9739-0e40fd00a4b8"),
+        new Uri(dataSourceUri),
         "Connection display name",
         "Description",
         "Work area name");
@@ -161,7 +161,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("    - {0}", project.DisplayName);
     }
 
-    var connection = await AddWorkAreaConnectionToProject(client, projectId);
+    var connection = await AddWorkAreaConnectionToProject(client, projectId, arguments.DataSourceUri);
 
     await RemoveWorkAreaConnection(client, projectId, connection.Id);
 
