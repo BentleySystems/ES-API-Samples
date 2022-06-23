@@ -22,7 +22,7 @@ A sample application that demonstrates how to create, query and delete a Project
 ## Development Setup (command line)
 
 1. Clone Repository
-2. Change directory into cloned folder `cd ES-API-Projects-Sample`
+2. Change directory into cloned folder `cd ES-API-Samples`
 3. Build app with `dotnet build`
 4. Change directory into build folder `cd EsApiProjectsSampleApp/bin/Debug/net6.0/`
 5. Run app with `dotnet EsApiProjectsSampleApp.dll --token "{your_token}"`
