@@ -108,9 +108,10 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         Number: arguments.Name,
         DatacenterLocation: dataCenter,
         BillingCountry: billingCountry,
-        GeographicLocation: billingCountry,
-        Latitude: 0,
-        Longitude: 0);
+        GeographicLocation: "Long Island",
+        Latitude: 40.76693550923309,
+        Longitude: -73.23495212697483,
+        TimeZone: "Eastern Standard Time");
     var createProjectResponse = await client.PostAsJsonAsync("project/preview/projects", createProject);
 
     // Handling create project request because it contains custom status codes:
@@ -132,11 +133,11 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     ConsoleApp.Log("Waiting for new project to be provisioned");
 
     async Task<string?> GetProvisionStateAsync() =>
-        (await client.GetFromJsonAsync<ProvisionStatus>($"project/preview/projects/{projectId}/provisions/{provisionId}"))
+        (await client.GetFromJsonAsync<Provision>($"project/preview/projects/{projectId}/provisions/{provisionId}"))
         ?.State;
 
     string? provisionState;
-    while ((provisionState = await GetProvisionStateAsync()) is CopyState.Queued or CopyState.Created or CopyState.Started)
+    while ((provisionState = await GetProvisionStateAsync()) is ProvisionStatus.Queued or ProvisionStatus.Created or ProvisionStatus.Started)
     {
         ConsoleApp.Log("Provision status: {0}", provisionState);
         await Task.Delay(TimeSpan.FromSeconds(5));
