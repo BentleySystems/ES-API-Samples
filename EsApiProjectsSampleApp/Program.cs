@@ -6,7 +6,8 @@ using System.Net;
 using System.Net.Http.Json;
 using EsApiProjectsSampleApp;
 
-var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId, string dataSourceUri) => {
+var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId, string dataSourceUri) =>
+{
     ConsoleApp.Log("Creating work area connection");
     // Work area connection makes it possible for cloud services to access ProjectWise data.
     var connectionToCreate = new CreateConnection(
@@ -35,7 +36,8 @@ var AddWorkAreaConnectionToProject = async (HttpClient client, Guid? projectId, 
     return connection;
 };
 
-var RemoveWorkAreaConnection = async (HttpClient client, Guid? projectId, string connectionId) => {
+var RemoveWorkAreaConnection = async (HttpClient client, Guid? projectId, string connectionId) =>
+{
     // Can't delete connection if it's primary. Need to remove primary status of the connection first.
     ConsoleApp.Log("Removing primary status of connection");
     await client.DeleteAsync($"workarea/preview/projects/{projectId}/primaryConnection/{connectionId}");
@@ -104,8 +106,11 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         TemplateId: template.Id,
         DisplayName: arguments.Name,
         Number: arguments.Name,
-        DataCenterLocation: dataCenter,
-        BillingCountry: billingCountry);
+        DatacenterLocation: dataCenter,
+        BillingCountry: billingCountry,
+        GeographicLocation: billingCountry,
+        Latitude: 0,
+        Longitude: 0);
     var createProjectResponse = await client.PostAsJsonAsync("project/preview/projects", createProject);
 
     // Handling create project request because it contains custom status codes:
@@ -119,9 +124,9 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         return;
     }
 
-    var createdProjectProvision = await createProjectResponse.Content.ReadFromJsonAsync<Provision>();
-    var projectId = createdProjectProvision?.ProjectId;
-    var provisionId = createdProjectProvision?.ProvisionId;
+    var createdProjectResponse = await createProjectResponse.Content.ReadFromJsonAsync<CreateProjectResponse>();
+    var projectId = createdProjectResponse?.Project.Id;
+    var provisionId = createdProjectResponse?.Provision.Id;
 
     // Wait for create project provision to finish
     ConsoleApp.Log("Waiting for new project to be provisioned");
@@ -139,37 +144,52 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
 
     ConsoleApp.Log("Provisioning finished. Fetching project.");
 
-    // Get project by Id
-    var createdProject = await client.GetFromJsonAsync<Project>($"project/preview/projects/{projectId}");
-
-    // Print project info to console
-    ConsoleApp.Log("Created project:");
-    ConsoleApp.Log("    Id: {0}", createdProject?.Id);
-    ConsoleApp.Log("    DisplayName: {0}", createdProject?.DisplayName);
-    ConsoleApp.Log("    Number: {0}", createdProject?.Number);
-
-    // Get projects list
-    ConsoleApp.Log("Fetching created project list.");
-
-    var projectsResponse = await client.GetFromJsonAsync<PagedResponse<Project>>($"project/preview/projects?projectName={arguments.Name}");
-    var projects = projectsResponse?.Items ?? throw new Exception("Could not parse GET projects response.");
-
-    // Print projects to console
-    ConsoleApp.Log("Project names:");
-    foreach (var project in projects)
     {
-        ConsoleApp.Log("    - {0}", project.DisplayName);
+        // Get project by Id
+        var project = await client.GetFromJsonAsync<Project>($"project/preview/projects/{projectId}");
+
+        // Print project info to console
+        ConsoleApp.Log("Created project:");
+        ConsoleApp.Log("    Id:                  {0}", project?.Id);
+        ConsoleApp.Log("    Display Name:        {0}", project?.DisplayName);
+        ConsoleApp.Log("    Number:              {0}", project?.Number);
+        ConsoleApp.Log("    Location:            {0}", project?.GeographicLocation);
+        ConsoleApp.Log("    Billing Country:     {0}", project?.BillingCountry);
+        ConsoleApp.Log("    Latitude:            {0}", project?.Latitude);
+        ConsoleApp.Log("    Longitude:           {0}", project?.Longitude);
+        ConsoleApp.Log("    Datacenter Location: {0}", project?.DatacenterLocation);
+        ConsoleApp.Log("    IsTemplate:          {0}", project?.IsTemplate);
+        ConsoleApp.Log("    Project Type:        {0}", project?.ProjectType);
+        ConsoleApp.Log("    Registered Date:     {0}", project?.RegisteredDate);
+        ConsoleApp.Log("    Time Zone:           {0}", project?.TimeZone);
+    }
+
+    {
+        // Get projects list
+        ConsoleApp.Log("Fetching created project list.");
+
+        var projectsResponse = await client.GetFromJsonAsync<PagedResponse<Project>>($"project/preview/projects?projectName={arguments.Name}");
+        var projects = projectsResponse?.Items ?? throw new Exception("Could not parse GET projects response.");
+
+        // Print projects to console
+        ConsoleApp.Log("Project names:");
+        foreach (var project in projects)
+        {
+            ConsoleApp.Log("    - {0}", project.DisplayName);
+        }
     }
 
     var connection = await AddWorkAreaConnectionToProject(client, projectId, arguments.DataSourceUri);
 
     await RemoveWorkAreaConnection(client, projectId, connection.Id);
 
-    // Delete created project
-    ConsoleApp.Log("Deleting created project.");
+    {
+        // Delete created project
+        ConsoleApp.Log("Deleting created project.");
 
-    var response = await client.DeleteAsync($"project/preview/projects/{projectId}");
-    response.EnsureSuccessStatusCode();
+        var response = await client.DeleteAsync($"project/preview/projects/{projectId}");
+        response.EnsureSuccessStatusCode();
 
-    ConsoleApp.Log("Project deleted.");
+        ConsoleApp.Log("Project deleted.");
+    }
 });

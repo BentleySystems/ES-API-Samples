@@ -3,6 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 using System.CommandLine;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
 namespace EsApiProjectsSampleApp
@@ -45,7 +46,7 @@ namespace EsApiProjectsSampleApp
         public static Configuration ReadConfiguration()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile("appsettings.json")
                 .Build();
 
