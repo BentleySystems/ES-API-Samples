@@ -41,5 +41,5 @@ For application need to register client and use its credentials to get access to
 ## API documentation
 
 API documentation in OpenAPI V3 format:
-* Projects API: https://es-api.bentley.com/project/preview/swagger.json
-* Work Area Connection API: https://es-api.bentley.com/workarea/preview/swagger.json
+* Projects API: https://es-api.bentley.com/project/v1/swagger.json
+* Work Area Connection API: https://es-api.bentley.com/workarea/v1/swagger.json
