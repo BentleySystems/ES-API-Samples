@@ -32,11 +32,51 @@ A sample application that demonstrates how to create, query and delete a Project
 
 ## How to acquire a token
 
-Valid access token with scope 'enterprise' is required to access API endpoints. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization/.
+Valid access token with scope 'enterprise' is required to access API endpoints. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization.
 
-For testing token could be obtained from API Swagger page: https://esapi-projects-eus.bentley.com/swagger/index.html.
+In order to run this sample app or if you want to develop your own application you'll have to register a client in https://developer.bentley.com/esregister.
 
-For application need to register client and use its credentials to get access token. 
+### API Client registration steps
+
+ 1. If you're not logged in, you'll get redirected to a login page once you go to https://developer.bentley.com/esregister. If you don't have one already, create an account and start the trial. Then go back to api client registration page.
+ 2. Fill in application name. This is a display name, client id will be generated automatically.
+ 3. Check the api client details:
+    1. Make sure `Enterprise` is checked under *API associations*
+    2. Make sure `enterprise` scope is added under *Allowed scopes*
+ 4. Select an appropriate application type. If you just want to run the sample app `Service` type will be enough. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization.
+ 5. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in.
+ 6. Click `Save`
+ 7. Make sure to copy client secret and close the dialog.
+ 8. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
+ 9. You should be able to authenticate now by using client id and secret with the appropriate flow.
+
+### Console commands to get the token via service client credentials
+
+#### Bash
+
+```sh
+curl --request POST \
+  --url 'https://ims.bentley.com/connect/token' \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data-urlencode grant_type=client_credentials \
+  --data-urlencode scope=enterprise \
+  --data-urlencode client_id=YOUR_CLIENT_ID \
+  --data-urlencode client_secret=YOUR_CLIENT_SECRET
+```
+
+#### Powershell
+
+```pwsh
+(Invoke-WebRequest -Method 'Post' `
+   -Uri 'https://ims.bentley.com/connect/token' `
+   -Headers @{ 'content-type' = 'application/x-www-form-urlencoded' } `
+   -Body @{ `
+      grant_type='client_credentials'; `
+      scope='enterprise'; `
+      client_id='service-ZsmjwKV7rZLGGjJd2pME9HIgf'; `
+      client_secret='bOSxYcu87CXk3Ya+37JYdhf1tt7Wb7u64wg34tCFf4VTc8ZhsXX1wEBx76HW8zaWdwf1c3i0YDjHrZ0vwG7Nfg==' `
+   }).Content
+```
 
 ## API documentation
 
