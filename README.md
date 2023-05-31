@@ -73,8 +73,8 @@ curl --request POST \
    -Body @{ `
       grant_type='client_credentials'; `
       scope='enterprise'; `
-      client_id='service-ZsmjwKV7rZLGGjJd2pME9HIgf'; `
-      client_secret='bOSxYcu87CXk3Ya+37JYdhf1tt7Wb7u64wg34tCFf4VTc8ZhsXX1wEBx76HW8zaWdwf1c3i0YDjHrZ0vwG7Nfg==' `
+      client_id='YOUR_CLIENT_ID'; `
+      client_secret='YOUR_CLIENT_SECRET' `
    }).Content
 ```
 
