@@ -2,7 +2,7 @@
 
 Copyright © Bentley Systems, Incorporated. All rights reserved.
 
-A sample application that demonstrates how to get the endpoints from the 4D Schedules External API.
+A sample application that demonstrates how to use the endpoints from the 4D Schedules External API.
 
 ## Prerequisites
 
