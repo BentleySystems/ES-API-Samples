@@ -14,10 +14,10 @@ namespace ScheduleAPIConsumer
     public class ResourceStatusPost
     {
         public string? changeRequestId { get; set; }
-        public ResourceStatusPostEntity? entity { get; set; }
+        public ResourceStatusPostItem? item { get; set; }
     }
 
-    public class ResourceStatusPostEntity
+    public class ResourceStatusPostItem
     {
         public string? resourceId { get; set; }
         public string? statusCategoryId { get; set; }
@@ -45,7 +45,7 @@ namespace ScheduleAPIConsumer
         {
             var response = await Client.GetAsync(RequestUri);
             var stringResp = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(stringResp);
+            Console.WriteLine($"Response: {stringResp}");
             Console.WriteLine();
             return stringResp;
         }
@@ -62,7 +62,7 @@ namespace ScheduleAPIConsumer
 
         public async Task<string> Post()
         {
-            var ent = new ResourceStatusPostEntity
+            var ent = new ResourceStatusPostItem
             {
                 resourceId = $"{Split[5]}",
                 date = new DateTime(2023, 3, 28, 9, 0, 0),
@@ -73,15 +73,15 @@ namespace ScheduleAPIConsumer
             var postReq = new ResourceStatusPost
             {
                 changeRequestId = Guid.NewGuid().ToString(),
-                entity = ent
+                item = ent
             };
 
             var json = JsonSerializer.Serialize(postReq);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             ConsoleApp.Log("POST request contains the following:");
-            Console.WriteLine($"{{\n  changeRequestId: {postReq.changeRequestId},\n  entity: {{\n    resourceId: {ent.resourceId}," +
-                $"\n    date: {ent.date},\n    statusCategoryId: {ent.statusCategoryId},\n    statusItemId: {ent.statusItemId},\n  }}\n}}");
+            Console.WriteLine($"{{\n  \"changeRequestId\": \"{postReq.changeRequestId}\",\n  \"item\": {{\n    \"resourceId\": \"{ent.resourceId}\"," +
+                $"\n    \"date\": \"{ent.date.ToString("s")}\",\n    \"statusCategoryId\": \"{ent.statusCategoryId}\",\n    \"statusItemId\": \"{ent.statusItemId}\",\n  }}\n}}");
 
             var response = await Client.PostAsync(RequestUri, content);
             string stringResp = response.Content.ReadAsStringAsync().Result;

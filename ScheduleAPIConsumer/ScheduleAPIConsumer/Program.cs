@@ -20,10 +20,10 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         DefaultRequestHeaders = { { "Authorization", $"Bearer {arguments.Token}" } },
     };
 
-    ConsoleApp.Log("Fetching schedules for a given project - Queries all schedules in the specified Project.");
+    ConsoleApp.Log("Initial query to test authorization. Fetching schedules for a given project - Queries all schedules in the specified Project.");
     var scheduleResponse = await client.GetAsync($"/4dschedule/v1/schedules?projectId={arguments.Schedule}");
     var stringResp = scheduleResponse.Content.ReadAsStringAsync().Result;
-    Console.WriteLine(stringResp);
+    Console.WriteLine($"Response: {stringResp}");
     Console.WriteLine();
 
     // only check once for authentication problems
@@ -175,23 +175,23 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             Console.WriteLine();
         }
 
-        ConsoleApp.Log("Fetching change requests for given project - Queries all change requests in the sync queue that have been submitted for the project.");
-        get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/changeRequests";
-        response = get.Get().Result;
-        stringManipulated = response.Remove(0, 16);
-        stringSplit = stringManipulated.Split('\"');
+        //ConsoleApp.Log("Fetching change requests for given project - Queries all change requests in the sync queue that have been submitted for the project.");
+        //get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/changeRequests";
+        //response = get.Get().Result;
+        //stringManipulated = response.Remove(0, 16);
+        //stringSplit = stringManipulated.Split('\"');
 
-        if (!response.Contains("\"items\":[]"))
-        {
-            ConsoleApp.Log("Fetching single change request for given project - Query a single change request in the specified sync project queue.");
-            get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/changeRequests/{stringSplit[1]}";
-            response = get.Get().Result;
-        }
-        else
-        {
-            ConsoleApp.Log("No items in Change Requests. Skipping individual ID endpoint requests.");
-            Console.WriteLine();
-        }
+        //if (!response.Contains("\"items\":[]"))
+        //{
+        //    ConsoleApp.Log("Fetching single change request for given project - Query a single change request in the specified sync project queue.");
+        //    get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/changeRequests/{stringSplit[1]}";
+        //    response = get.Get().Result;
+        //}
+        //else
+        //{
+        //    ConsoleApp.Log("No items in Change Requests. Skipping individual ID endpoint requests.");
+        //    Console.WriteLine();
+        //}
 
         ConsoleApp.Log("Fetching codes for given project - Queries all codes in the specified project schedule.");
         get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/codes";
@@ -348,6 +348,18 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             ConsoleApp.Log("Posting new resource status history - Add a new resource status history item to an associated resource.");
             var post = new HttpPost($"/4dschedule/v1/schedules/{schedule.ProjectId}/resourceStatusHistory", client, stringSplit);
             var postResp = post.Post().Result;
+
+            if (postResp.Contains("changeRequestId"))
+            {
+                stringSplit = postResp.Split('\"');
+                ConsoleApp.Log("Fetching single change request for given project - Query a single change request in the specified sync project queue.");
+                get.RequestUri = $"/4dschedule/v1/schedules/{schedule.ProjectId}/changeRequests/{stringSplit[3]}";
+                response = get.Get().Result;
+            }
+            else
+            {
+                ConsoleApp.Log("POST failed. Skipping change request endpoint request.");
+            }
         }
         else
         {
