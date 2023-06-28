@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ScheduleAPIConsumer": {
+      "commandName": "Project",
+      "commandLineArgs": "--token \"Enter your bearer token here\" --schedule \"Enter your schedule ID here\" --single"
+    }
+  }
+}

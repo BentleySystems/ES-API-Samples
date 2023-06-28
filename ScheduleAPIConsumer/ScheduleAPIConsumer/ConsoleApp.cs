@@ -1,0 +1,93 @@
+﻿/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+using System.CommandLine;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
+
+namespace ScheduleAPIConsumer
+{
+    public delegate Task RunAppAsync(Arguments arguments, Configuration configuration);
+
+    public static class ConsoleApp
+    {
+        public static Task<int> RunAsync(string[] args, RunAppAsync runAsync)
+        {
+            // Console App options
+            var tokenOption = new Option<string>("--token", "Authentication token")
+            {
+                IsRequired = true,
+            };
+            var scheduleOption = new Option<string>("--schedule", "Schedule ID to query from")
+            {
+                IsRequired = true,
+            };
+            var allOption = new Option<bool>("--all", "Query all endpoints")
+            {
+                IsRequired = false,
+            };
+            var singleOption = new Option<bool>("--single", "Queries a single endpoint - /4dschedule/v1/schedules/{schedule_id}")
+            {
+                IsRequired = false,
+            };
+            var postOption = new Option<bool>("--post", "Send a POST request to the Resource Status History endpoint")
+            {
+                IsRequired = false,
+            };
+
+            // Add the options to a root command:
+            var rootCommand = new RootCommand { tokenOption, scheduleOption, allOption, singleOption, postOption };
+
+            rootCommand.Description = "External Schedule API Sample App";
+
+            rootCommand.SetHandler(async (string token, string schedule, bool all, bool single, bool post) =>
+            {
+                if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
+                {
+                    Log("--token argument must be set.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(schedule) || schedule == "<Add schedule ID here>")
+                {
+                    Log("--schedule argument must be set.");
+                    return;
+                }
+
+                if (!post && !all && !single)
+                {
+                    Log("Set an option for which type of operation (--post, --all, or --single).");
+                    return;
+                }
+
+                if ((post && all) || (single && post) || (single && all))
+                {
+                    Log("Cannot set post, all, or single all at once. Select only one of these options.");
+                    return;
+                }
+
+                    await runAsync(new Arguments(token, schedule, all, single, post), ReadConfiguration());
+            }, tokenOption, scheduleOption, allOption, singleOption, postOption);
+
+            // Parse the incoming args and invoke the handler
+            return rootCommand.InvokeAsync(args);
+        }
+
+        public static Configuration ReadConfiguration()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            return new Configuration(
+                ServiceHost: new Uri(configuration[nameof(Configuration.ServiceHost)]));
+        }
+
+        public static void Log(string message, params object?[] args)
+        {
+            Console.WriteLine("{0}: {1}", DateTime.Now, string.Format(message, args));
+        }
+    }
+}
