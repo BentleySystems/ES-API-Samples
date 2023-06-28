@@ -24,7 +24,7 @@ A sample application that demonstrates how to get the endpoints from the 4D Sche
 2. Change directory into cloned folder `cd ScheduleAPIConsumer`
 3. Build app with `dotnet build`
 4. Change directory into build folder `cd ScheduleAPIConsumer/bin/Debug/net6.0/`
-5. Run app with `dotnet ScheduleAPIConsumer.dll --token "{your_token}" --schedule "{your_schedule}"`
+5. Run app with `dotnet ScheduleAPIConsumer.dll --token "{your_token}" --schedule "{your_schedule}"`, additionally add either `"--single"`, `"--all"`, or `"--post"` to the arguments. Note that only one of these can be used at a time.
    1. [How to acquire a token](#how-to-acquire-a-token) is explained below.
 
 ## How to acquire a token
