@@ -4,5 +4,5 @@
 *--------------------------------------------------------------------------------------------*/
 namespace ScheduleAPIConsumer
 {
-    public record Arguments(string Token, string Schedule, bool All, bool Single, bool Post);
+    public record Arguments(string Token, string Schedule, bool Single, bool Post);
 }

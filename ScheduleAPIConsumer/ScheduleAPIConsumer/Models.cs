@@ -9,7 +9,6 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleAPIConsumer
 {
-    public record Schedules(string ProjectId, string OrderBy, string Order, int PageSize, string PageToken);
 
     public class ResourceStatusPost
     {
@@ -65,7 +64,7 @@ namespace ScheduleAPIConsumer
             var ent = new ResourceStatusPostItem
             {
                 resourceId = $"{Split[5]}",
-                date = new DateTime(2023, 3, 28, 9, 0, 0),
+                date = DateTime.Now,
                 statusCategoryId = $"{Split[27]}",
                 statusItemId = $"{Split[17]}"
             };
@@ -81,7 +80,7 @@ namespace ScheduleAPIConsumer
 
             ConsoleApp.Log("POST request contains the following:");
             Console.WriteLine($"{{\n  \"changeRequestId\": \"{postReq.changeRequestId}\",\n  \"item\": {{\n    \"resourceId\": \"{ent.resourceId}\"," +
-                $"\n    \"date\": \"{ent.date.ToString("s")}\",\n    \"statusCategoryId\": \"{ent.statusCategoryId}\",\n    \"statusItemId\": \"{ent.statusItemId}\",\n  }}\n}}");
+                $"\n    \"date\": \"{ent.date:s}\",\n    \"statusCategoryId\": \"{ent.statusCategoryId}\",\n    \"statusItemId\": \"{ent.statusItemId}\",\n  }}\n}}");
 
             var response = await Client.PostAsync(RequestUri, content);
             string stringResp = response.Content.ReadAsStringAsync().Result;
