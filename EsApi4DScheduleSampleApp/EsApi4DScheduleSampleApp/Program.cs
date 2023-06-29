@@ -30,8 +30,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     // only check once for authentication problems
     if (!scheduleResponse.IsSuccessStatusCode)
         {
-            ConsoleApp.Log("Fetching schedules for given project failed with status code: {0}.\nResponse: {1}", scheduleResponse.StatusCode, await scheduleResponse.Content.ReadAsStringAsync(),
-                string.Join(";", scheduleResponse.Headers.Select(h => h.ToString())));
+            ConsoleApp.Log("Fetching schedules for given project failed with status code: {0}.", scheduleResponse.StatusCode);
             if (scheduleResponse.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden && scheduleResponse.Headers.TryGetValues("WWW-Authenticate", out var reasonHeader))
             {
                 ConsoleApp.Log("Authentication failure reason: {0}", string.Join(";", reasonHeader));
