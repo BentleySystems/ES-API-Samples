@@ -23,10 +23,6 @@ namespace ScheduleAPIConsumer
             {
                 IsRequired = true,
             };
-            var allOption = new Option<bool>("--all", "Query all endpoints")
-            {
-                IsRequired = false,
-            };
             var singleOption = new Option<bool>("--single", "Queries a single endpoint - /4dschedule/v1/schedules/{schedule_id}")
             {
                 IsRequired = false,
@@ -37,11 +33,11 @@ namespace ScheduleAPIConsumer
             };
 
             // Add the options to a root command:
-            var rootCommand = new RootCommand { tokenOption, scheduleOption, allOption, singleOption, postOption };
+            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption };
 
             rootCommand.Description = "External Schedule API Sample App";
 
-            rootCommand.SetHandler(async (string token, string schedule, bool all, bool single, bool post) =>
+            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post) =>
             {
                 if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
                 {
@@ -55,20 +51,14 @@ namespace ScheduleAPIConsumer
                     return;
                 }
 
-                if (!post && !all && !single)
+                if (single && post)
                 {
-                    Log("Set an option for which type of operation (--post, --all, or --single).");
+                    Log("Cannot set both post and single at once. Select only one of these options.");
                     return;
                 }
 
-                if ((post && all) || (single && post) || (single && all))
-                {
-                    Log("Cannot set post, all, or single all at once. Select only one of these options.");
-                    return;
-                }
-
-                    await runAsync(new Arguments(token, schedule, all, single, post), ReadConfiguration());
-            }, tokenOption, scheduleOption, allOption, singleOption, postOption);
+                    await runAsync(new Arguments(token, schedule, single, post), ReadConfiguration());
+            }, tokenOption, scheduleOption, singleOption, postOption);
 
             // Parse the incoming args and invoke the handler
             return rootCommand.InvokeAsync(args);
