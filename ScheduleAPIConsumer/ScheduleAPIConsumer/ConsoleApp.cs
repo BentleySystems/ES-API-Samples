@@ -6,7 +6,7 @@ using System.CommandLine;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
-namespace ScheduleAPIConsumer
+namespace EsApi4DScheduleSampleApp
 {
     public delegate Task RunAppAsync(Arguments arguments, Configuration configuration);
 

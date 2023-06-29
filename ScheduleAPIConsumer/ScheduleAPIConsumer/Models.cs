@@ -7,7 +7,7 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ScheduleAPIConsumer
+namespace EsApi4DScheduleSampleApp
 {
 
     public class ResourceStatusPost
