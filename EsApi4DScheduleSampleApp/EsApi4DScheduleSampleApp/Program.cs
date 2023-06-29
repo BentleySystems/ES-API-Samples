@@ -23,7 +23,11 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     ConsoleApp.Log("Initial query to test authorization. Fetching schedules for a given project - Queries all schedules in the specified Project.");
     ConsoleApp.Log($"Sending GET request to {client.BaseAddress}?projectId={arguments.Schedule}");
     var scheduleResponse = await client.GetAsync($"?projectId={arguments.Schedule}");
+<<<<<<< HEAD
     var stringResp = await scheduleResponse.Content.ReadAsStringAsync();
+=======
+    var stringResp = scheduleResponse.Content.ReadAsStringAsync().Result;
+>>>>>>> f4da8dc (renames and moves files to new renamed folder)
     Console.WriteLine($"Response: {stringResp}");
     Console.WriteLine();
 
@@ -48,7 +52,11 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             ConsoleApp.Log("Fetching single schedule - Use this endpoint to query a single schedule in the specified project schedule list.");
             ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}");
             var get = new HttpGet($"{arguments.Schedule}", client);
+<<<<<<< HEAD
             var response = await get.Get();
+=======
+            var response = get.Get().Result;
+>>>>>>> f4da8dc (renames and moves files to new renamed folder)
         }
         else
         {
@@ -61,6 +69,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("Fetching all resource status history - Use this endpoint to query all resource status history items in the specified project schedule.");
         ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
         var get = new HttpGet($"{arguments.Schedule}/resourceStatusHistory", client);
+<<<<<<< HEAD
         var response = await get.GetResourceStatusHistory();
         Console.WriteLine();
 
@@ -70,6 +79,19 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             ConsoleApp.Log($"Sending POST request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
             var post = new HttpPost($"{arguments.Schedule}/resourceStatusHistory", client);
             var postResp = await post.Post(response);
+=======
+        var response = get.Get().Result;
+        var stringManipulated = response.Remove(0, 16);
+        var stringSplit = stringManipulated.Split('\"');
+        Console.WriteLine();
+
+        if (!response.Contains("\"items\":[]"))
+        {
+            ConsoleApp.Log("Posting new resource status history - Add a new resource status history item to an associated resource.");
+            ConsoleApp.Log($"Sending POST request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
+            var post = new HttpPost($"{arguments.Schedule}/resourceStatusHistory", client, stringSplit);
+            var postResp = post.Post().Result;
+>>>>>>> f4da8dc (renames and moves files to new renamed folder)
         }
         else
         {
@@ -82,6 +104,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("Fetching all resource status histories - Use this endpoint to query all resource status history items in the specified project schedule.");
         ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
         var get = new HttpGet($"{arguments.Schedule}/resourceStatusHistory", client);
+<<<<<<< HEAD
         var response = await get.GetResourceStatusHistory();
         Console.WriteLine();
 
@@ -105,6 +128,33 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
                 ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/changeRequests/{postResp.changeRequestId}");
                 get.RequestUri = $"{arguments.Schedule}/changeRequests/{postResp.changeRequestId}";
                 var changeResponse = await get.Get();
+=======
+        var response = get.Get().Result;
+        var stringManipulated = response.Remove(0, 16);
+        var stringSplit = stringManipulated.Split('\"');
+        var id = stringSplit[1];
+
+        if (!response.Contains("\"items\":[]"))
+        {
+            ConsoleApp.Log("Fetching single resource status history - Use this endpoint to query a single resource status history item in the specified project schedule.");
+            ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory/{id}");
+            get.RequestUri = $"{arguments.Schedule}/resourceStatusHistory/{id}";
+            response = get.Get().Result;
+
+            ConsoleApp.Log("Posting new resource status history - Add a new resource status history item to an associated resource.");
+            ConsoleApp.Log($"Sending POST request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
+            var post = new HttpPost($"{arguments.Schedule}/resourceStatusHistory", client, stringSplit);
+            var postResp = post.Post().Result;
+
+            if (postResp.Contains("changeRequestId"))
+            {
+                stringSplit = postResp.Split('\"');
+                id = stringSplit[3];
+                ConsoleApp.Log("Fetching single change request for given project - Query a single change request in the specified sync project queue.");
+                ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/changeRequests/{id}");
+                get.RequestUri = $"{arguments.Schedule}/changeRequests/{id}";
+                response = get.Get().Result;
+>>>>>>> f4da8dc (renames and moves files to new renamed folder)
             }
             else
             {

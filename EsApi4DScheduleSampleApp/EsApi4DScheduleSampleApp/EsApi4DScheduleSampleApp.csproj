@@ -14,7 +14,11 @@
 
   <ItemGroup>
     <Content Include="appsettings.json">
+<<<<<<< HEAD
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+=======
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+>>>>>>> f4da8dc (renames and moves files to new renamed folder)
     </Content>
   </ItemGroup>
 
