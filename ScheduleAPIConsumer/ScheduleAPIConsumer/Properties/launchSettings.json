@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ScheduleAPIConsumer": {
+    "EsApi4DScheduleSampleApp": {
       "commandName": "Project",
       "commandLineArgs": "--token \"Enter your bearer token here\" --schedule \"Enter your schedule ID here\""
     }
