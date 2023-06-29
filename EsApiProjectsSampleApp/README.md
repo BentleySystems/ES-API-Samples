@@ -2,11 +2,11 @@
 
 Copyright © Bentley Systems, Incorporated. All rights reserved.
 
-A sample application that demonstrates how to create, query and delete a Project using the Enterprise Systems Project API, billing country endpoint and data center endpoint usage. It also demonstrates Enterprise Systems Work Area Connection API, using the ProjectWise Web Connections API for mapping Work Area Connections from Project Wise Design Integration to iTwin Projects.
+A sample application that demonstrates how to create, query and delete a Project using the Enterprise Systems Project API. It also demonstrates Enterprise Systems Work Area Connection API, billing country endpoint and data center endpoint usage.
 
 ## Prerequisites
 
-Detailed in the [root directory README.md](../README.md).
+Detailed in the root directory README.md.
 
 ## Development Setup (Visual Studio 2022)
 
@@ -29,7 +29,7 @@ Detailed in the [root directory README.md](../README.md).
 
 ## How to acquire a token
 
-Detailed in the [root directory README.md](../README.md).
+Detailed in the root directory README.md.
 
 ## API documentation
 
