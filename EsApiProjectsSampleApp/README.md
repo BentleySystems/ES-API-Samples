@@ -6,7 +6,7 @@ A sample application that demonstrates how to create, query and delete a Project
 
 ## Prerequisites
 
-Detailed in the root directory README.md.
+Detailed in the [root directory README.md](../README.md).
 
 ## Development Setup (Visual Studio 2022)
 
@@ -29,7 +29,7 @@ Detailed in the root directory README.md.
 
 ## How to acquire a token
 
-Detailed in the root directory README.md.
+Detailed in the [root directory README.md](../README.md).
 
 ## API documentation
 
