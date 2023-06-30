@@ -6,7 +6,7 @@ A sample application that demonstrates how to use the endpoints from the 4D Sche
 
 ## Prerequisites
 
-Detailed in the root directory README.md.
+Detailed in the [root directory README.md](../README.md).
 
 ## Development Setup (Visual Studio 2022)
 
@@ -28,7 +28,7 @@ Detailed in the root directory README.md.
 
 ## How to acquire a token
 
-Detailed in the root directory README.md.
+Detailed in the [root directory README.md](../README.md).
 
 ## API documentation
 
