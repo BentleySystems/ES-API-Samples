@@ -17,5 +17,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '6.0.x'
-    - name: Build
-      run: dotnet build EsApiProjectsSampleApp/EsApiProjectsSampleApp.csproj
+    - name: Build Projects
+      run: dotnet build EsApiProjectsSampleApp/EsApiProjectsSampleApp/EsApiProjectsSampleApp.csproj
+    - name: Build Schedules
+      run: dotnet build EsApi4DScheduleSampleApp/EsApi4DScheduleSampleApp/EsApi4DScheduleSampleApp.csproj
