@@ -30,10 +30,10 @@ const App: React.FC = () => {
   const authClient = new BrowserAuthorizationClient({
     clientId: userClientId,
     scope: "enterprise offline_access",
-    redirectUri: "https://localhost:3000/signin-callback",
-    postSignoutRedirectUri: "https://localhost:3000/logout",
+    redirectUri: "https://localhost:4000/signin-callback",
+    postSignoutRedirectUri: "https://localhost:4000/logout",
     responseType: "code",
-    silentRedirectUri: "https://localhost:3000/signin-callback",
+    silentRedirectUri: "https://localhost:4000/signin-callback",
     authority: "https://ims.bentley.com/",
   });
 
@@ -223,7 +223,6 @@ const App: React.FC = () => {
   return (
     <>
       <h2>Sample SPA App interfacing with 4D Schedules External API</h2>
-      {<p>{token}</p>}
       {isLoggedIn ? renderLogin() : renderLogOut()}
     </>
   );
