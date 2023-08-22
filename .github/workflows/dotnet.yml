@@ -20,4 +20,4 @@ jobs:
     - name: Build Projects
       run: dotnet build EsApiProjectsSampleApp/EsApiProjectsSampleApp/EsApiProjectsSampleApp.csproj
     - name: Build Schedules
-      run: dotnet build EsApi4DScheduleSampleApp/EsApi4DScheduleSampleApp/EsApi4DScheduleSampleApp.csproj
+      run: dotnet build EsApi4DScheduleServiceSampleApp/EsApi4DScheduleSampleApp/EsApi4DScheduleSampleApp.csproj
