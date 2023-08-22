@@ -19,13 +19,14 @@ A sample application that demonstrates how to use the endpoints from the 4D Sche
 1. Clone repository
 2. Open the folder in Visual Studio Code
 3. Ctrl+J to open a terminal in the IDE which will default to the base folder
-4. `npm install --force` in the terminal to install dependencies
-5. Run the application `npm start`
+4. Change directory `cd EsApi4DScheduleSPASampleApp`
+5. `npm install --force` in the terminal to install dependencies
+6. Run the application `npm start`
 
 ## Development Setup (command line)
 
 1. Clone repository
-2. Change directory to cloned folder `cd EsApi4DScheduleSPASampleApp`
+2. Change directory to cloned folder `cd ES-API-Samples/EsApi4DScheduleSPASampleApp`
 3. Install dependencies `npm install --force`
 5. Run the application `npm start`
 
