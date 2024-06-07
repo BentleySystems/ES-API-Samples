@@ -10,9 +10,9 @@ namespace EsApi4DScheduleSampleApp.Models
     {
         public HttpGet(string requestUri, HttpClient client) : base(requestUri, client) { }
 
-        public async Task<T> GetJson<T>()
+        public async Task<T> GetJson<T>(string pageSize = "100")
         {
-            var response = await Client.GetAsync(RequestUri);
+            var response = await Client.GetAsync($"{RequestUri}?pageSize={pageSize}");
             var jsonResp = await response.Content.ReadFromJsonAsync<T>();
             Console.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
             return jsonResp!;

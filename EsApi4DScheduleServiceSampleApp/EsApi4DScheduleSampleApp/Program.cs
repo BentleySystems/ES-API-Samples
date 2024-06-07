@@ -77,7 +77,18 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("Fetching Resource User Field Values - Use this endpoint to query all resources and their assigned user field values in the specified project schedule.");
         ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resources/userFieldValues");
         var get = new HttpGet($"{arguments.Schedule}/resources/userFieldValues", client);
-        var response = await get.Get();
+        var response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination);
+        Console.WriteLine();
+
+        if (response.Items != null)
+        {
+            Console.WriteLine();
+            while (response.NextPageToken != string.Empty)
+            {
+                response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination);
+                Console.WriteLine();
+            }
+        }
     }
     else
     {
