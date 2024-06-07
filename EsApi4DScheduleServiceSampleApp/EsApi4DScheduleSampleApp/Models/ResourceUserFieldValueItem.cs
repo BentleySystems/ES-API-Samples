@@ -2,7 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-namespace EsApi4DScheduleSampleApp
+namespace EsApi4DScheduleSampleApp.Models
 {
-    public record Arguments(string Token, string Schedule, bool Single, bool Post, string? Pagination);
+    public class ResourceUserFieldValueItem
+    {
+        public string? ResourceId { get; set; }
+        public string? UserFieldId { get; set; }
+        public string? Value { get; set; }
+    }
 }

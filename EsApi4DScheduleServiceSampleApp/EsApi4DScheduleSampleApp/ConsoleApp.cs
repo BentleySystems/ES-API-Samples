@@ -31,13 +31,17 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = false,
             };
+            var paginationOption = new Option<string>("--pagination", "Demonstrates pagination by getting Tasks repeatedly until no more can be acquired")
+            {
+                IsRequired = false,
+            };
 
             // Add the options to a root command:
             var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption };
 
             rootCommand.Description = "External Schedule API Sample App";
 
-            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post) =>
+            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post, string pagination) =>
             {
                 if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
                 {
@@ -51,14 +55,20 @@ namespace EsApi4DScheduleSampleApp
                     return;
                 }
 
-                if (single && post)
+                if (string.IsNullOrWhiteSpace(pagination) || pagination == "<Add page size here>")
                 {
-                    Log("Cannot set both post and single at once. Select only one of these options.");
+                    Log("Pagination was selected but not set. Please set a page size.");
                     return;
                 }
 
-                    await runAsync(new Arguments(token, schedule, single, post), ReadConfiguration());
-            }, tokenOption, scheduleOption, singleOption, postOption);
+                if (single ? (post || pagination is not null) : (post && pagination is not null))
+                {
+                    Log("Cannot set multiple functionality arguments (POST, single, pagination) at once. Select only one of these options.");
+                    return;
+                }
+
+                    await runAsync(new Arguments(token, schedule, single, post, pagination), ReadConfiguration());
+            }, tokenOption, scheduleOption, singleOption, postOption, paginationOption);
 
             // Parse the incoming args and invoke the handler
             return rootCommand.InvokeAsync(args);

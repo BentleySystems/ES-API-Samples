@@ -2,14 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-using System;
-using System.Diagnostics.Metrics;
 using System.Net;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using EsApi4DScheduleSampleApp;
+using EsApi4DScheduleSampleApp.Models;
 
 
 await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
@@ -61,10 +56,10 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         ConsoleApp.Log("Fetching all resource status history - Use this endpoint to query all resource status history items in the specified project schedule.");
         ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
         var get = new HttpGet($"{arguments.Schedule}/resourceStatusHistory", client);
-        var response = await get.GetResourceStatusHistory();
+        var response = await get.GetJson<ResourceStatusHistoryGet>();
         Console.WriteLine();
 
-        if (response.items != null)
+        if (response.Items != null)
         {
             ConsoleApp.Log("Posting new resource status history - Add a new resource status history item to an associated resource.");
             ConsoleApp.Log($"Sending POST request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
@@ -77,20 +72,27 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         }
         return;
     }
+    else if (arguments.Pagination is not null)
+    {
+        ConsoleApp.Log("Fetching Resource User Field Values - Use this endpoint to query all resources and their assigned user field values in the specified project schedule.");
+        ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resources/userFieldValues");
+        var get = new HttpGet($"{arguments.Schedule}/resources/userFieldValues", client);
+        var response = await get.Get();
+    }
     else
     {
         ConsoleApp.Log("Fetching all resource status histories - Use this endpoint to query all resource status history items in the specified project schedule.");
         ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory");
         var get = new HttpGet($"{arguments.Schedule}/resourceStatusHistory", client);
-        var response = await get.GetResourceStatusHistory();
+        var response = await get.GetJson<ResourceStatusHistoryGet>();
         Console.WriteLine();
 
-        if (response.items != null)
+        if (response.Items != null)
         {
             ConsoleApp.Log("Fetching single resource status history - Use this endpoint to query a single resource status history item in the specified project schedule.");
-            ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory/{response.items[0].id}");
-            get.RequestUri = $"{arguments.Schedule}/resourceStatusHistory/{response.items[0].id}";
-            var itemResponse = await get.GetSingleResourceStatusHistory();
+            ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resourceStatusHistory/{response.Items[0].Id}");
+            get.RequestUri = $"{arguments.Schedule}/resourceStatusHistory/{response.Items[0].Id}";
+            var itemResponse = await get.GetJson<ResourceStatusHistoryGetItem>();
             Console.WriteLine();
 
             ConsoleApp.Log("Posting new resource status history - Add a new resource status history item to an associated resource.");
