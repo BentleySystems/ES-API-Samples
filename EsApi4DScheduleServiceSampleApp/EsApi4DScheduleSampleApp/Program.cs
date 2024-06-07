@@ -89,6 +89,11 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
                 Console.WriteLine();
             }
         }
+        else
+        {
+            ConsoleApp.Log("No items in Resource User Field Values. Skipping.");
+        }
+        return;
     }
     else
     {
