@@ -85,7 +85,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             Console.WriteLine();
             while (response.NextPageToken != string.Empty)
             {
-                response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination);
+                response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination, response.NextPageToken!);
                 Console.WriteLine();
             }
         }

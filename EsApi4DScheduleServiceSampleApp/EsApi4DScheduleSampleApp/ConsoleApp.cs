@@ -23,6 +23,10 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = true,
             };
+            var paginationOption = new Option<string>("--pagination", "Demonstrates pagination by getting Resource User Field Values repeatedly until no more can be acquired")
+            {
+                IsRequired = false,
+            };
             var singleOption = new Option<bool>("--single", "Queries a single endpoint - /4dschedule/v1/schedules/{schedule_id}")
             {
                 IsRequired = false,
@@ -31,13 +35,9 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = false,
             };
-            var paginationOption = new Option<string>("--pagination", "Demonstrates pagination by getting Tasks repeatedly until no more can be acquired")
-            {
-                IsRequired = false,
-            };
 
             // Add the options to a root command:
-            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption };
+            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption, paginationOption };
 
             rootCommand.Description = "External Schedule API Sample App";
 
