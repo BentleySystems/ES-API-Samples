@@ -26,13 +26,12 @@ namespace EsApi4DScheduleSampleApp.Models
             return jsonResp!;
         }
 
-        public async Task<string> Get()
+        public async Task Get()
         {
             var response = await Client.GetAsync(RequestUri);
             var stringResp = await response.Content.ReadAsStringAsync();
             Console.WriteLine($"Response: {stringResp}");
             Console.WriteLine();
-            return stringResp;
         }
     }
 }

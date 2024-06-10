@@ -43,7 +43,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
             ConsoleApp.Log("Fetching single schedule - Use this endpoint to query a single schedule in the specified project schedule list.");
             ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}");
             var get = new HttpGet($"{arguments.Schedule}", client);
-            var response = await get.Get();
+            await get.Get();
         }
         else
         {
@@ -127,7 +127,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
                 ConsoleApp.Log("Fetching single change request for given project - Query a single change request in the specified sync project queue.");
                 ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/changeRequests/{postResp.changeRequestId}");
                 get.RequestUri = $"{arguments.Schedule}/changeRequests/{postResp.changeRequestId}";
-                var changeResponse = await get.Get();
+                await get.Get();
             }
             else
             {
