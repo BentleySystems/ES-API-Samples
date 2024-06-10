@@ -23,7 +23,7 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = true,
             };
-            var paginationOption = new Option<string>("--pagination", "Demonstrates pagination by getting Resource User Field Values repeatedly until no more can be acquired")
+            var paginationOption = new Option<string>("--pagination", "Page size (integer) to use for pagination against the Resources User Field Values endpoint - /4dschedules/v1/schedules/{schedule_id}/resources/userFieldValues")
             {
                 IsRequired = false,
             };
@@ -55,15 +55,15 @@ namespace EsApi4DScheduleSampleApp
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(pagination) || pagination == "<Add page size here>")
-                {
-                    Log("Pagination was selected but not set. Please set a page size.");
-                    return;
-                }
-
                 if (single ? (post || pagination is not null) : (post && pagination is not null))
                 {
                     Log("Cannot set multiple functionality arguments (POST, single, pagination) at once. Select only one of these options.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(pagination) || pagination == "<Add page size here>")
+                {
+                    Log("Pagination was selected but not set. Please set a page size.");
                     return;
                 }
 

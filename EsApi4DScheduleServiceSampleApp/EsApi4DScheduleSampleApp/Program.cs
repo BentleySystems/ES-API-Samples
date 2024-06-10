@@ -80,12 +80,17 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         var response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination);
         Console.WriteLine();
 
+        int items = 0;
         if (response.Items != null)
         {
             Console.WriteLine();
-            while (response.NextPageToken != string.Empty)
+            while (response.NextPageToken is not null)
             {
                 response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination, response.NextPageToken!);
+                Console.WriteLine();
+                items += response.Items!.Count;
+                Console.WriteLine($"Next page token is: \"{response.NextPageToken}\"");
+                Console.WriteLine($"Total items: {items}");
                 Console.WriteLine();
             }
         }
