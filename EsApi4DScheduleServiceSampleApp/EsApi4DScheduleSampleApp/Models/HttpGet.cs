@@ -10,7 +10,15 @@ namespace EsApi4DScheduleSampleApp.Models
     {
         public HttpGet(string requestUri, HttpClient client) : base(requestUri, client) { }
 
-        public async Task<T> GetJson<T>(string pageSize = "100", string nextPageToken = "null")
+        public async Task<T> GetJson<T>()
+        {
+            var response = await Client.GetAsync($"{RequestUri}");
+            var jsonResp = await response.Content.ReadFromJsonAsync<T>();
+            Console.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
+            return jsonResp!;
+        }
+
+        public async Task<Dictionary<string, object>> GetJsonAsDict(string pageSize = "100", string nextPageToken = "null")
         {
             HttpResponseMessage response;
             if (nextPageToken is not "null")
@@ -21,9 +29,14 @@ namespace EsApi4DScheduleSampleApp.Models
             {
                 response = await Client.GetAsync($"{RequestUri}?pageSize={pageSize}");
             }
-            var jsonResp = await response.Content.ReadFromJsonAsync<T>();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Response failed with {response.StatusCode}");
+            }
+            var jsonResp = await response.Content.ReadAsStringAsync();
+            var deserializedResp = JsonDictHelper.DeserialiseAndFlatten(jsonResp);
             Console.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
-            return jsonResp!;
+            return deserializedResp;
         }
 
         public async Task Get()

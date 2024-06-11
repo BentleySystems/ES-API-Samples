@@ -4,10 +4,9 @@
 *--------------------------------------------------------------------------------------------*/
 namespace EsApi4DScheduleSampleApp.Models
 {
-    public class ResourceUserFieldValueItem
+    public class ListValue<T>
     {
-        public string? ResourceId { get; set; }
-        public string? UserFieldId { get; set; }
-        public string? Value { get; set; }
+        public List<T>? Items { get; set; }
+        public string? NextPageToken { get; set; }
     }
 }

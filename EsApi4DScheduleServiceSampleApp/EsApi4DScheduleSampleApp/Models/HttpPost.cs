@@ -48,7 +48,7 @@ namespace EsApi4DScheduleSampleApp.Models
             var ent = new ResourceStatusPostItem
             {
                 // just get first item in list
-                ResourceId = json.Items[0].ResourceId,
+                ResourceId = json.Items![0].ResourceId,
                 Date = DateTime.Now,
                 StatusCategoryId = json.Items[0].StatusCategoryId,
                 StatusItemId = json.Items[0].StatusItemId,

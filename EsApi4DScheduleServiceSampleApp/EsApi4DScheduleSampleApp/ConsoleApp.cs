@@ -23,7 +23,11 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = true,
             };
-            var paginationOption = new Option<string>("--pagination", "Page size (integer) to use for pagination against the Resources User Field Values endpoint - /4dschedules/v1/schedules/{schedule_id}/resources/userFieldValues")
+            var paginationOption = new Option<string>("--pagination", "Page size to use for pagination against the Resources User Field Values endpoint - /4dschedules/v1/schedules/{schedule_id}/resources/userFieldValues")
+            {
+                IsRequired = false,
+            };
+            var paginationEndpoint = new Option<string>("--endpoint", "Endpoint for pagination query")
             {
                 IsRequired = false,
             };
@@ -37,11 +41,11 @@ namespace EsApi4DScheduleSampleApp
             };
 
             // Add the options to a root command:
-            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption, paginationOption };
+            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption, paginationOption, paginationEndpoint };
 
             rootCommand.Description = "External Schedule API Sample App";
 
-            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post, string pagination) =>
+            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post, string pagination, string endpoint) =>
             {
                 if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
                 {
@@ -61,14 +65,26 @@ namespace EsApi4DScheduleSampleApp
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(pagination) || pagination == "<Add page size here>")
+                if (string.IsNullOrWhiteSpace(pagination) && pagination is not null)
                 {
                     Log("Pagination was selected but not set. Please set a page size.");
                     return;
                 }
 
-                    await runAsync(new Arguments(token, schedule, single, post, pagination), ReadConfiguration());
-            }, tokenOption, scheduleOption, singleOption, postOption, paginationOption);
+                if (string.IsNullOrWhiteSpace(endpoint) && endpoint is not null)
+                {
+                    Log("Endpoint was selected but not set. Please set an endpoint to use for pagination queries.");
+                    return;
+                }
+
+                if (pagination is not null && endpoint is null)
+                {
+                    Log("Pagination was selected but endpoint was not provided. Please provide an endpoint to use for pagination queries.");
+                    return;
+                }
+
+                    await runAsync(new Arguments(token, schedule, single, post, pagination, endpoint), ReadConfiguration());
+            }, tokenOption, scheduleOption, singleOption, postOption, paginationOption, paginationEndpoint);
 
             // Parse the incoming args and invoke the handler
             return rootCommand.InvokeAsync(args);

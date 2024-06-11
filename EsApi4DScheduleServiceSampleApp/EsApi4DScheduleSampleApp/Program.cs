@@ -3,6 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 using System.Net;
+using System.Text.Json;
 using EsApi4DScheduleSampleApp;
 using EsApi4DScheduleSampleApp.Models;
 
@@ -74,31 +75,33 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
     }
     else if (arguments.Pagination is not null)
     {
-        ConsoleApp.Log("Fetching Resource User Field Values - Use this endpoint to query all resources and their assigned user field values in the specified project schedule.");
-        ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}/resources/userFieldValues");
-        var get = new HttpGet($"{arguments.Schedule}/resources/userFieldValues", client);
-        var response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination);
-        Console.WriteLine();
-
-        int items = 0;
-        if (response.Items != null)
+        try
         {
+            ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}{arguments.Endpoint}");
+            var get = new HttpGet($"{arguments.Schedule}{arguments.Endpoint}", client);
+            var response = await get.GetJsonAsDict(arguments.Pagination);
             Console.WriteLine();
-            while (response.NextPageToken is not null)
+
+            if (!response.ContainsKey("nextPageToken"))
             {
-                response = await get.GetJson<ResourceUserFieldValue>(arguments.Pagination, response.NextPageToken!);
+                ConsoleApp.Log("No nextPageToken found, exiting");
+                return;
+            }
+
+            while (response["nextPageToken"] is not null)
+            {
+                response = await get.GetJsonAsDict(arguments.Pagination, response["nextPageToken"].ToString()!);
                 Console.WriteLine();
-                items += response.Items!.Count;
-                Console.WriteLine($"Next page token is: \"{response.NextPageToken}\"");
-                Console.WriteLine($"Total items: {items}");
+                Console.WriteLine($"Next page token is: \"{response["nextPageToken"]}\"");
                 Console.WriteLine();
             }
+            return;
         }
-        else
+        catch (Exception e)
         {
-            ConsoleApp.Log("No items in Resource User Field Values. Skipping.");
+            ConsoleApp.Log($"Error occurred: {e}");
+            return;
         }
-        return;
     }
     else
     {

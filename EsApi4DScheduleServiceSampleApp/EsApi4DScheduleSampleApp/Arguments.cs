@@ -4,5 +4,5 @@
 *--------------------------------------------------------------------------------------------*/
 namespace EsApi4DScheduleSampleApp
 {
-    public record Arguments(string Token, string Schedule, bool Single, bool Post, string? Pagination);
+    public record Arguments(string Token, string Schedule, bool Single, bool Post, string? Pagination, string? Endpoint);
 }
