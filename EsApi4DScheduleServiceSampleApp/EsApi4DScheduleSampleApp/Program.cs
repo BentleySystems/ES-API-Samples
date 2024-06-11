@@ -79,18 +79,19 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
         {
             ConsoleApp.Log($"Sending GET request to {client.BaseAddress}{arguments.Schedule}{arguments.Endpoint}");
             var get = new HttpGet($"{arguments.Schedule}{arguments.Endpoint}", client);
-            var response = await get.GetJsonAsDict(arguments.Pagination);
+            var response = await get.GetJson(arguments.Pagination);
             Console.WriteLine();
 
-            if (!response.ContainsKey("nextPageToken"))
+            if (JTokenChecker.IsNullOrEmpty(response["nextPageToken"]!)) 
             {
                 ConsoleApp.Log("No nextPageToken found, exiting");
                 return;
             }
+            Console.WriteLine($"Next page token found: \"{response["nextPageToken"]}\"");
 
-            while (response["nextPageToken"] is not null)
+            while (!JTokenChecker.IsNullOrEmpty(response["nextPageToken"]!))
             {
-                response = await get.GetJsonAsDict(arguments.Pagination, response["nextPageToken"].ToString()!);
+                response = await get.GetJson(arguments.Pagination, response["nextPageToken"]!.ToString());
                 Console.WriteLine();
                 Console.WriteLine($"Next page token is: \"{response["nextPageToken"]}\"");
                 Console.WriteLine();

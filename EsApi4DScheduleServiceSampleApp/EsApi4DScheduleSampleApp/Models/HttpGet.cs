@@ -3,6 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 using System.Net.Http.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EsApi4DScheduleSampleApp.Models
 {
@@ -18,7 +19,7 @@ namespace EsApi4DScheduleSampleApp.Models
             return jsonResp!;
         }
 
-        public async Task<Dictionary<string, object>> GetJsonAsDict(string pageSize = "100", string nextPageToken = "null")
+        public async Task<JToken> GetJson(string pageSize = "100", string nextPageToken = "null")
         {
             HttpResponseMessage response;
             if (nextPageToken is not "null")
@@ -33,10 +34,10 @@ namespace EsApi4DScheduleSampleApp.Models
             {
                 throw new Exception($"Response failed with {response.StatusCode}");
             }
-            var jsonResp = await response.Content.ReadAsStringAsync();
-            var deserializedResp = JsonDictHelper.DeserialiseAndFlatten(jsonResp);
+            var jsonResp = JToken.Parse(await response.Content.ReadAsStringAsync());
+            //var deserializedResp = JsonDictHelper.DeserialiseAndFlatten(jsonResp);
             Console.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
-            return deserializedResp;
+            return jsonResp;
         }
 
         public async Task Get()
