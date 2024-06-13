@@ -1,4 +1,4 @@
-# Synchro 4D Schedules External API Application
+# Synchro 4D Schedules External API Service Application
 
 Copyright © Bentley Systems, Incorporated. All rights reserved.
 

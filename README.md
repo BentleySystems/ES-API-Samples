@@ -5,7 +5,7 @@ Copyright © Bentley Systems, Incorporated. All rights reserved.
 A repository for sample applications which utilise aspects of Bentley's ES-API. This README details processes which are the same among the subprojects.
 * [ES-API Projects](/EsApiProjectsSampleApp/) - Demonstrates how to create, query, and delete a Project using the Enterprise Systems Project API, also dealing with billing country endpoints and data center endpoint usage.
 * [ES-API WorkArea](/EsApiProjectsSampleApp/) - ProjectWise Web Connections API for mapping Work Area Connections from Project Wise Design Integration to iTwin Projects.
-* [ES-API 4D Schedules](/EsApi4DScheduleServiceSampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
+* [ES-API 4D Schedules Service](/EsApi4DScheduleServiceSampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
 * [ES-API 4D Schedules SPA](/EsApi4DScheduleSPASampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
 
 ## Prerequisites
