@@ -28,7 +28,7 @@ In order to run this sample app or if you want to develop your own application y
  3. Check the api client details:
     1. Make sure `Enterprise` is checked under *API associations*
     2. Make sure `enterprise` scope is added under *Allowed scopes*
-    3. For web apps, make sure `Allow Offlines Access` is checked.
+    3. For web apps, make sure `Allow Offline Access` is checked.
  4. Select an appropriate application type. If you just want to run the sample app `Service` type will be enough. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization.
  5. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in.
  6. Click `Save`
