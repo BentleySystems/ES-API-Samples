@@ -23,7 +23,7 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = true,
             };
-            var paginationOption = new Option<string>("--pagination", "Page size to use for pagination against the Resources User Field Values endpoint - /4dschedules/v1/schedules/{schedule_id}/resources/userFieldValues")
+            var paginationOption = new Option<string>("--pagination", "Page size to use for pagination - must be between 1-10000.")
             {
                 IsRequired = false,
             };
