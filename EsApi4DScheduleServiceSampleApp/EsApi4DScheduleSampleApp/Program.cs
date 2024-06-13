@@ -3,7 +3,6 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 using System.Net;
-using System.Text.Json;
 using EsApi4DScheduleSampleApp;
 using EsApi4DScheduleSampleApp.Models;
 
