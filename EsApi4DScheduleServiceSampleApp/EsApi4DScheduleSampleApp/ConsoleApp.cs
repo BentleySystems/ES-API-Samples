@@ -77,9 +77,31 @@ namespace EsApi4DScheduleSampleApp
                     return;
                 }
 
+                if (pagination is not null)
+                {
+                    if (int.TryParse(pagination, out var num))
+                    {
+                        if (num < 1 || num > 10000)
+                        {
+                            Log("Page size was not within the supported range (1-10000). Please provide a number within the appropriate range.");
+                            return;
+                        }
+                    } else
+                    {
+                        Log("Page size given was not a number. Please provide a number within the appropriate range (1-10000).");
+                        return;
+                    }
+                }
+
                 if (pagination is not null && endpoint is null)
                 {
                     Log("Pagination was selected but endpoint was not provided. Please provide an endpoint to use for pagination queries.");
+                    return;
+                }
+
+                if (pagination is null && endpoint is not null)
+                {
+                    Log("Endpoint was selected without pagination being set. Please provide the pagination option with an apppropriate page size (1-10000).");
                     return;
                 }
 
