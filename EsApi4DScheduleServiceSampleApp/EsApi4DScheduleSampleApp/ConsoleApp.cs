@@ -86,7 +86,8 @@ namespace EsApi4DScheduleSampleApp
                             Log("Page size was not within the supported range (1-10000). Please provide a number within the appropriate range.");
                             return;
                         }
-                    } else
+                    } 
+                    else
                     {
                         Log("Page size given was not a number. Please provide a number within the appropriate range (1-10000).");
                         return;

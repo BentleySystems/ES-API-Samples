@@ -87,6 +87,7 @@ await ConsoleApp.RunAsync(args, async (arguments, configuration) =>
                 return;
             }
             Console.WriteLine($"Next page token found: \"{response["nextPageToken"]}\"");
+            Console.WriteLine();
 
             while (!JTokenChecker.IsNullOrEmpty(response["nextPageToken"]!))
             {
