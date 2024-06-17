@@ -35,7 +35,6 @@ namespace EsApi4DScheduleSampleApp.Models
                 throw new Exception($"Response failed with {response.StatusCode}");
             }
             var jsonResp = JToken.Parse(await response.Content.ReadAsStringAsync());
-            //var deserializedResp = JsonDictHelper.DeserialiseAndFlatten(jsonResp);
             Console.WriteLine($"Response: {await response.Content.ReadAsStringAsync()}");
             return jsonResp;
         }
