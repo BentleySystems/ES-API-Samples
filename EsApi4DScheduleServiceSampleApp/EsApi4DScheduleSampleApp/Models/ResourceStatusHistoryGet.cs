@@ -7,6 +7,7 @@ namespace EsApi4DScheduleSampleApp.Models
     public class ResourceStatusHistoryGet
     {
         public List<ResourceStatusHistoryGetItem>? Items { get; set; }
-        public object? NextPageToken { get; set; }
+
+        public int? NextPageToken { get; set; }
     }
 }
