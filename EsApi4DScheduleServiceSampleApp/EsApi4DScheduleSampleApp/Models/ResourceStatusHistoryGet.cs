@@ -8,6 +8,6 @@ namespace EsApi4DScheduleSampleApp.Models
     {
         public List<ResourceStatusHistoryGetItem>? Items { get; set; }
 
-        public int? NextPageToken { get; set; }
+        public string? NextPageToken { get; set; }
     }
 }
