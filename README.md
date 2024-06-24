@@ -5,7 +5,7 @@ Copyright © Bentley Systems, Incorporated. All rights reserved.
 A repository for sample applications which utilise aspects of Bentley's ES-API. This README details processes which are the same among the subprojects.
 * [ES-API Projects](/EsApiProjectsSampleApp/) - Demonstrates how to create, query, and delete a Project using the Enterprise Systems Project API, also dealing with billing country endpoints and data center endpoint usage.
 * [ES-API WorkArea](/EsApiProjectsSampleApp/) - ProjectWise Web Connections API for mapping Work Area Connections from Project Wise Design Integration to iTwin Projects.
-* [ES-API 4D Schedules](/EsApi4DScheduleServiceSampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
+* [ES-API 4D Schedules Service](/EsApi4DScheduleServiceSampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
 * [ES-API 4D Schedules SPA](/EsApi4DScheduleSPASampleApp/) - Demonstrates an example workflow of acquiring a Resource Status History item and changing the Date value within said item using the 4D Schedules External API.
 
 ## Prerequisites
@@ -28,7 +28,7 @@ In order to run this sample app or if you want to develop your own application y
  3. Check the api client details:
     1. Make sure `Enterprise` is checked under *API associations*
     2. Make sure `enterprise` scope is added under *Allowed scopes*
-    3. For web apps, make sure `Allow Offlines Access` is checked.
+    3. For web apps, make sure `Allow Offline Access` is checked.
  4. Select an appropriate application type. If you just want to run the sample app `Service` type will be enough. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization.
  5. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in.
  6. Click `Save`

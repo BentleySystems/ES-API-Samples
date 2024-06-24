@@ -23,6 +23,14 @@ namespace EsApi4DScheduleSampleApp
             {
                 IsRequired = true,
             };
+            var paginationOption = new Option<string>("--pagination", "Page size to use for pagination - must be between 1-10000.")
+            {
+                IsRequired = false,
+            };
+            var paginationEndpoint = new Option<string>("--endpoint", "Endpoint for pagination query")
+            {
+                IsRequired = false,
+            };
             var singleOption = new Option<bool>("--single", "Queries a single endpoint - /4dschedule/v1/schedules/{schedule_id}")
             {
                 IsRequired = false,
@@ -33,11 +41,11 @@ namespace EsApi4DScheduleSampleApp
             };
 
             // Add the options to a root command:
-            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption };
+            var rootCommand = new RootCommand { tokenOption, scheduleOption, singleOption, postOption, paginationOption, paginationEndpoint };
 
             rootCommand.Description = "External Schedule API Sample App";
 
-            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post) =>
+            rootCommand.SetHandler(async (string token, string schedule, bool single, bool post, string pagination, string endpoint) =>
             {
                 if (string.IsNullOrWhiteSpace(token) || token == "<Add token here>")
                 {
@@ -51,14 +59,55 @@ namespace EsApi4DScheduleSampleApp
                     return;
                 }
 
-                if (single && post)
+                if (single ? (post || pagination is not null) : (post && pagination is not null))
                 {
-                    Log("Cannot set both post and single at once. Select only one of these options.");
+                    Log("Cannot set multiple functionality arguments (POST, single, pagination) at once. Select only one of these options.");
                     return;
                 }
 
-                    await runAsync(new Arguments(token, schedule, single, post), ReadConfiguration());
-            }, tokenOption, scheduleOption, singleOption, postOption);
+                if (string.IsNullOrWhiteSpace(pagination) && pagination is not null)
+                {
+                    Log("Pagination was selected but not set. Please set a page size.");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(endpoint) && endpoint is not null)
+                {
+                    Log("Endpoint was selected but not set. Please set an endpoint to use for pagination queries.");
+                    return;
+                }
+
+                if (pagination is not null)
+                {
+                    if (int.TryParse(pagination, out var num))
+                    {
+                        if (num < 1 || num > 10000)
+                        {
+                            Log("Page size was not within the supported range (1-10000). Please provide a number within the appropriate range.");
+                            return;
+                        }
+                    } 
+                    else
+                    {
+                        Log("Page size given was not a number. Please provide a number within the appropriate range (1-10000).");
+                        return;
+                    }
+                }
+
+                if (pagination is not null && endpoint is null)
+                {
+                    Log("Pagination was selected but endpoint was not provided. Please provide an endpoint to use for pagination queries.");
+                    return;
+                }
+
+                if (pagination is null && endpoint is not null)
+                {
+                    Log("Endpoint was selected without pagination being set. Please provide the pagination option with an apppropriate page size (1-10000).");
+                    return;
+                }
+
+                    await runAsync(new Arguments(token, schedule, single, post, pagination, endpoint), ReadConfiguration());
+            }, tokenOption, scheduleOption, singleOption, postOption, paginationOption, paginationEndpoint);
 
             // Parse the incoming args and invoke the handler
             return rootCommand.InvokeAsync(args);
