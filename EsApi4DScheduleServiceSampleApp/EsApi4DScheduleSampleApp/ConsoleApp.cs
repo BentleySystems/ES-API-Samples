@@ -102,7 +102,7 @@ namespace EsApi4DScheduleSampleApp
 
                 if (pagination is null && endpoint is not null)
                 {
-                    Log("Endpoint was selected without pagination being set. Please provide the pagination option with an apppropriate page size (1-10000).");
+                    Log("Endpoint was selected without pagination being set. Please provide the pagination option with an appropriate page size (1-10000).");
                     return;
                 }
 
