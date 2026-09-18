@@ -29,10 +29,11 @@ In order to run this sample app or if you want to develop your own application y
     1. Make sure `Enterprise` is checked under *API associations*
     2. Make sure `enterprise` scope is added under *Allowed scopes*
     3. For web apps, make sure `Allow Offline Access` is checked.
- 4. Select an appropriate application type. If you just want to run the sample app `Service` type will be enough. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization.
+ 4. Select an appropriate application type. If you just want to run the sample app get user token from https://microfrontenddeveussa01.z13.web.core.windows.net/esapi. 
+ 5. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization. We highly recommend to use either SPA or Web App type as the token generated from these apps will be a user token and not a service token(if application type is `Service`). If you want to use `Service`type app, then you need to make a ServiceNow request to add the email to Bentley Ims along with CONNECT Services Admin role as this is a service identity user and needs to access all projects within the organization and able to create new projects.
  5. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in.
  6. Click `Save`
- 7. Make sure to copy client secret and close the dialog.
+ 7. Make sure to copy client secret and close the dialog. Client secret is not required if the application is of SPA type.
  8. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
  9. You should be able to authenticate now by using client id and secret with the appropriate flow.
 
