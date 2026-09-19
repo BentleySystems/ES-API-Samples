@@ -26,8 +26,8 @@ If you want to develop your own application you'll have to register a client in 
  1. If you're not logged in, you'll get redirected to a login page once you go to https://developer.bentley.com/esregister. Then go back to api client registration page.
  2. Fill in application name, an appropriate application type. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in and then. Then click on Register button. Client id and Client secret will be generated automatically. Make sure to copy client secret and close the dialog. Client secret is not required if the application is of SPA type.
  3. If you don't know which application type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization. We highly recommend to use either SPA or Web App type as the token generated from these apps will be a user token and not a service token(if application type is `Service`). If you want to use `Service`type app, then you need to make a ServiceNow request with the clientId and email(clientId@apps.imsoidc.bentley.com) to add this service identity user to your organization along with CONNECT Services Admin role as this user needs to access all projects within your organization and able to create new projects.
- 9. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
- 10. You should be able to authenticate now by using client id and secret with the appropriate flow.
+ 4. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
+ 5. You should be able to authenticate now by using client id and secret with the appropriate flow.
 
 ### Console commands to get the token via service client credentials
 
