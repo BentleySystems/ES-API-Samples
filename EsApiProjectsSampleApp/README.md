@@ -39,5 +39,5 @@ API documentation in OpenAPI V3 format:
 
 ## Requirements
 
-1. The user must be an Admin within their organization (Account Admin, Co-Administrator, or CONNECT Services Admin) or have the itwins_create permission at the Account iTwin level.
+1. The user must be an Admin within their organization (Account Admin, Co-Administrator, or CONNECT Services Admin) or have the itwins_create permission at the Account iTwin level to be able to create new projects.
 2. The sample app does not support unaffiliated users.
