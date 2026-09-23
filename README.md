@@ -17,24 +17,18 @@ A repository for sample applications which utilise aspects of Bentley's ES-API. 
 
 ## How to acquire a token
 
-Valid access token with scope 'enterprise' is required to access API endpoints. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization.
+Valid access token with scope 'enterprise' is required to access API endpoints. If you just want to run the sample app get user token from https://microfrontenddeveussa01.z13.web.core.windows.net/esapi. For more technical information about tokens and authentication see: https://developer.bentley.com/apis/overview/authorization.
 
-In order to run this sample app or if you want to develop your own application you'll have to register a client in https://developer.bentley.com/esregister.
+If you want to develop your own application you'll have to register a client in https://developer.bentley.com/esregister.
 
 ### API Client registration steps
 
- 1. If you're not logged in, you'll get redirected to a login page once you go to https://developer.bentley.com/esregister. If you don't have one already, create an account and start the trial. Then go back to api client registration page.
- 2. Fill in application name. This is a display name, client id will be generated automatically.
- 3. Check the api client details:
-    1. Make sure `Enterprise` is checked under *API associations*
-    2. Make sure `enterprise` scope is added under *Allowed scopes*
-    3. For web apps, make sure `Allow Offline Access` is checked.
- 4. Select an appropriate application type. If you just want to run the sample app `Service` type will be enough. If you don't know which type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization.
- 5. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in.
- 6. Click `Save`
- 7. Make sure to copy client secret and close the dialog.
- 8. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
- 9. You should be able to authenticate now by using client id and secret with the appropriate flow.
+ 1. If you're not logged in, you'll get redirected to a login page once you go to https://developer.bentley.com/esregister. Then go back to api client registration page.
+ 2. Fill in application name, an appropriate application type.
+ 3. If you don't know which application type to choose for a user-facing application check out https://developer.bentley.com/apis/overview/authorization. We highly recommend to use either SPA or Web App type as the token generated from these apps will be a user token and not a service token(if application type is `Service`). If you want to use `Service`type app, then you need to make a ServiceNow request with the clientId and email(clientId@apps.imsoidc.bentley.com) to add this service identity user to your organization along with CONNECT Services Admin role as this user needs to access all projects within your organization and able to create new projects.
+ 4. Fill in redirect url if application type is not `Service`. This is the url to your application which authentication service will come back to once user is logged in and then. Then click on Register button. Client id and Client secret will be generated automatically. Make sure to copy client secret and close the dialog. Client secret is not required if the application is of SPA type.
+ 5. A page should appear with created api client. In order to get tokens you'll also need the client id that should be shown in this window.
+ 6. You should be able to authenticate now by using client id and secret with the appropriate flow.
 
 ### Console commands to get the token via service client credentials
 

@@ -36,3 +36,8 @@ Detailed in the [root directory README.md](../README.md).
 API documentation in OpenAPI V3 format:
 * Projects API: https://es-api.bentley.com/project/v1/swagger.json
 * Work Area Connection API: https://es-api.bentley.com/workarea/v1/swagger.json
+
+## Note
+
+1. The user must be an Admin within their organization (Account Admin, Co-Administrator, or CONNECT Services Admin) or have the itwins_create permission at the Account iTwin level to be able to create new projects.
+2. The sample app is intended to be used by users affiliated with an organization.
